@@ -26,7 +26,7 @@ def plot_one_dist(ax, bins, mean_dist, crystal,\
         ax.plot([], [], ' ', label = 'mean = ' + mean_dist_mean_str + ' Å')
     else:
         ax.axvline(mean_dist_mean, color = 'k', linestyle = '--', \
-        label = 'mean = ' + str(crystal) + ' Å')
+        label = 'mean = ' + mean_dist_mean_str + ' Å')
 
     # standard deviation
     ax.plot([], [], ' ', \
