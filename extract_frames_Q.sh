@@ -28,7 +28,7 @@ ATOM_NUM=C3
 for (( i=$START; i<$END; i++ ))
 do
     TIME=$(echo "$DP$i$TS" | bc)
-    echo 17 | gmx trjconv -f $tr -s $gro -dump $TIME -o $fb &>/dev/null
+    echo 1 | gmx trjconv -f $tr -s $gro -dump $TIME -o $fb &>/dev/null
 
     #frame count
     fc=$((i+1))
