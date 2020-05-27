@@ -23,12 +23,12 @@ DP="scale=2;"
 TS="*0.5"
 
 #headgroup carbon atom number
-ATOM_NUM=329911
+ATOM_NUM=3
 
 for (( i=$START; i<$END; i++ ))
 do
     TIME=$(echo "$DP$i$TS" | bc)
-    echo 17 | gmx trjconv -f $tr -s $gro -dump $TIME -o $fb &>/dev/null 
+    echo 17 | gmx trjconv -f $tr -s $gro -dump $TIME -o $fb &>/dev/null
 
     #frame count
     fc=$((i+1))
