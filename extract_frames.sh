@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 #frame buffer
 fb=framebuffer.pdb
@@ -28,7 +28,7 @@ ATOM_NUM=329911
 for (( i=$START; i<$END; i++ ))
 do
     TIME=$(echo "$DP$i$TS" | bc)
-    echo 1 | gmx trjconv -f $tr -s $gro -dump $TIME -o $fb &>/dev/null 
+    echo 17 | gmx trjconv -f $tr -s $gro -dump $TIME -o $fb &>/dev/null 
 
     #frame count
     fc=$((i+1))
@@ -38,6 +38,5 @@ do
     grep '$ATOM_NUM' $fb >> $cb
 
     #remove framebuffer
-    rm $fb 
+    rm $fb
 done
-
