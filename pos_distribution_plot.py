@@ -20,7 +20,8 @@ lines = coor_buffer.readlines()
 
 # initial position of atom
 first_entry = lines[1].split()
-init_position = [first_entry[5], first_entry[6], first_entry[7]]
+init_position_str = np.array([first_entry[5], first_entry[6], first_entry[7]])
+init_position = init_position_str.astype(np.float)
 
 # data arrays for analysis
 dx_arr = np.array([])
@@ -32,8 +33,10 @@ for line in lines:
     # skip frame index
     if line_entry[0] != "frame":
         # process data
-        curr_position = [line_entry[5], line_entry[6], line_entry[7]]
+        curr_position_str = np.array([line_entry[5], \
+        line_entry[6], line_entry[7]])
+        curr_position = curr_position_str.astype(np.float)
         dx, dy, dz = find_position_deviation(init_position, curr_position)
-        dx_arr.append(dx)
-        dy_arr.append(dy)
-        dz_arr.append(dz)
+        np.append(dx_arr, dx)
+        np.append(dy_arr, dy)
+        np.append(dz_arr, dz)
