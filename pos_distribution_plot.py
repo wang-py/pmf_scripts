@@ -19,7 +19,7 @@ coor_buffer = open(coor_buffer_file, 'r')
 lines = coor_buffer.readlines()
 
 # initial position of atom
-first_entry = lines[0].split()
+first_entry = lines[1].split()
 init_position = [first_entry[5], first_entry[6], first_entry[7]]
 
 # data arrays for analysis
