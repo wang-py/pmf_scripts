@@ -37,5 +37,17 @@ for line in lines:
         line_entry[6], line_entry[7]])
         curr_position = curr_position_str.astype(np.float)
         # find deviations in three dimensions
-        dist = find_position_deviation(init_position, curr_position)
+        dist = find_distance_moved(init_position, curr_position)
         dist_arr.append(dist)
+
+# plotting
+fig, ax = plt.subplots(figsize=(10,6))
+bins = 20
+fig.suptitle("atom distance travelled distribution")
+common_xlabel = "deviation from initial position [Å]"
+fig.text(0.5, 0.04, common_xlabel, ha='center')
+# distribution of distance
+ax.set(ylabel = "Frequency")
+plot_one_dist(ax, bins, dist_arr, 0, False)
+
+plt.show()
