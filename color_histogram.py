@@ -20,10 +20,12 @@ def plot_one_dist(mean_dist, crystal, save = False):
     plt.ylabel('Frequency')
 
     # crystal structure line
-    plt.axvline(crystal, color = 'k', linestyle = '--', label = 'starting position = ' + str(crystal) + ' Å')
+    plt.axvline(crystal, color = 'k', linestyle = '--', \
+    label = 'starting position = ' + str(crystal) + ' Å')
 
     # standard deviation
-    plt.plot([], [], ' ', label = 'standard deviation = ' + mean_dist_std_str + ' Å')
+    plt.plot([], [], ' ', \
+    label = 'standard deviation = ' + mean_dist_std_str + ' Å')
 
     # mean
     plt.plot([], [], ' ', label = 'mean = ' + mean_dist_mean_str + ' Å')
