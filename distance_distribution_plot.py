@@ -20,3 +20,22 @@ coor_buffer_file = sys.argv[1]
 
 coor_buffer = open(coor_buffer_file, 'r')
 lines = coor_buffer.readlines()
+
+# initial position of atom
+first_entry = lines[1].split()
+init_position_str = np.array([first_entry[5], first_entry[6], first_entry[7]])
+init_position = init_position_str.astype(np.float)
+
+# distance travelled
+dist_arr = []
+for line in lines:
+    line_entry = line.split()
+    # skip frame index
+    if line_entry[0] != "frame":
+        # process data
+        curr_position_str = np.array([line_entry[5], \
+        line_entry[6], line_entry[7]])
+        curr_position = curr_position_str.astype(np.float)
+        # find deviations in three dimensions
+        dist = find_position_deviation(init_position, curr_position)
+        dist_arr.append(dist)
