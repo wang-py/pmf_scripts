@@ -14,9 +14,9 @@ def plot_one_dist(ax, mean_dist, crystal, save = False):
 
     # plotting mean_dist distribution
     bins = 30
-    ax.set(title = 'Distribution of movement in one direction')
-    ax.set(xlabel = 'deviation from fixed point [Å]')
-    ax.set(ylabel = 'Frequency')
+    #ax.set(title = 'Distribution of movement in one direction')
+    #ax.set(xlabel = 'deviation from fixed point [Å]')
+    #ax.set(ylabel = 'Frequency')
 
     # crystal structure line
     ax.axvline(crystal, color = 'k', linestyle = '--', \
