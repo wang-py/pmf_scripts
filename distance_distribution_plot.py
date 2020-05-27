@@ -48,6 +48,6 @@ common_xlabel = "deviation from initial position [Å]"
 fig.text(0.5, 0.04, common_xlabel, ha='center')
 # distribution of distance
 ax.set(ylabel = "Frequency")
-plot_one_dist(ax, bins, dist_arr, 0, False)
+plot_one_dist(ax, bins, dist_arr, 0, False, False)
 
 plt.show()
