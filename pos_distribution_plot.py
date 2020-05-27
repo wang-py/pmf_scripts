@@ -5,6 +5,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+from color_histogram import *
 
 def find_position_deviation(p0, pn):
     dx = pn[0] - p0[0]
@@ -55,4 +56,6 @@ ax[0].set(ylabel = "Frequency")
 ax[1].hist(dy_arr, bins)
 # distribution of dz
 ax[2].hist(dz_arr, bins)
+# histograms with color and best fit
+plot_one_dist(dx_arr, 0, False)
 plt.show()
