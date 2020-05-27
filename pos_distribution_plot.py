@@ -50,14 +50,11 @@ fig.suptitle("atom movement distribution in three directions")
 common_xlabel = "deviation from initial position [Å]"
 fig.text(0.5, 0.04, common_xlabel, ha='center')
 # distribution of dx
-#ax[0].hist(dx_arr, bins)
-#ax[0].set(ylabel = "Frequency")
-# distribution of dy
-#ax[1].hist(dy_arr, bins)
-# distribution of dz
-#ax[2].hist(dz_arr, bins)
-# histograms with color and best fit
+ax[0].set(ylabel = "Frequency")
 plot_one_dist(ax[0], dx_arr, 0, False)
+# distribution of dy
 plot_one_dist(ax[1], dy_arr, 0, False)
+# distribution of dz
 plot_one_dist(ax[2], dz_arr, 0, False)
+
 plt.show()
