@@ -46,6 +46,5 @@ def plot_one_dist(mean_dist, crystal, save = False):
     plt.legend(loc = 'best')
     if save:
         plt.savefig('plots/all_pairs_mean_distribution.png', dpi=200)
-    plt.show()
     # return the plot object
     return ax
