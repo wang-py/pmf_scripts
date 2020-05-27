@@ -43,7 +43,7 @@ for line in lines:
         dz_arr.append(dz)
 
 # plotting
-fig, ax = plt.subplots(3)
+fig, ax = plt.subplots(1, 3)
 bins = 8
 # distribution of dx
 ax[0].hist(dx_arr, bins)
