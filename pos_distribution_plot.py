@@ -51,10 +51,10 @@ common_xlabel = "deviation from initial position [Å]"
 fig.text(0.5, 0.04, common_xlabel, ha='center')
 # distribution of dx
 ax[0].set(ylabel = "Frequency")
-plot_one_dist(ax[0], dx_arr, 0, False)
+plot_one_dist(ax[0], bins, dx_arr, 0, False)
 # distribution of dy
-plot_one_dist(ax[1], dy_arr, 0, False)
+plot_one_dist(ax[1], bins, dy_arr, 0, False)
 # distribution of dz
-plot_one_dist(ax[2], dz_arr, 0, False)
+plot_one_dist(ax[2], bins, dz_arr, 0, False)
 
 plt.show()

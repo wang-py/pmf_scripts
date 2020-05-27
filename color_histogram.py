@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 
-def plot_one_dist(ax, mean_dist, crystal, save = False):
+def plot_one_dist(ax, bins, mean_dist, crystal, save = False):
 
     # get standard deviation of the mean_dist's
     mean_dist_std = np.std(mean_dist)
@@ -13,7 +13,6 @@ def plot_one_dist(ax, mean_dist, crystal, save = False):
     mean_dist_mean_str = f"{mean_dist_mean:.2f}"
 
     # plotting mean_dist distribution
-    bins = 30
     #ax.set(title = 'Distribution of movement in one direction')
     #ax.set(xlabel = 'deviation from fixed point [Å]')
     #ax.set(ylabel = 'Frequency')
