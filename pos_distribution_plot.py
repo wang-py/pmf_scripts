@@ -8,3 +8,5 @@ import sys
 
 # read file from command line
 coor_buffer_file = sys.argv[1]
+
+coor_buffer = open(coor_buffer_file)
