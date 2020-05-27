@@ -35,7 +35,7 @@ do
     echo "frame $fc: " >> $cb
 
     #find the carbon attached to the tail
-    grep -w '$ATOM_NUM' $fb >> $cb
+    grep -w $ATOM_NUM $fb >> $cb
 
     #remove framebuffer
     rm $fb
