@@ -57,7 +57,7 @@ fig.text(0.5, 0.04, common_xlabel, ha='center')
 # distribution of dz
 #ax[2].hist(dz_arr, bins)
 # histograms with color and best fit
-ax[0] = plot_one_dist(dx_arr, 0, False)
-ax[1] = plot_one_dist(dy_arr, 0, False)
-ax[2] = plot_one_dist(dz_arr, 0, False)
+plot_one_dist(ax[0], dx_arr, 0, False)
+plot_one_dist(ax[1], dy_arr, 0, False)
+plot_one_dist(ax[2], dz_arr, 0, False)
 plt.show()

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 
-def plot_one_dist(mean_dist, crystal, save = False):
+def plot_one_dist(ax, mean_dist, crystal, save = False):
 
     # get standard deviation of the mean_dist's
     mean_dist_std = np.std(mean_dist)
@@ -13,22 +13,21 @@ def plot_one_dist(mean_dist, crystal, save = False):
     mean_dist_mean_str = f"{mean_dist_mean:.2f}"
 
     # plotting mean_dist distribution
-    fig, ax = plt.subplots(figsize=(10,6))
     bins = 30
-    plt.title('Distribution of movement in one direction')
-    plt.xlabel('deviation from fixed point [Å]')
-    plt.ylabel('Frequency')
+    ax.set(title = 'Distribution of movement in one direction')
+    ax.set(xlabel = 'deviation from fixed point [Å]')
+    ax.set(ylabel = 'Frequency')
 
     # crystal structure line
-    plt.axvline(crystal, color = 'k', linestyle = '--', \
+    ax.axvline(crystal, color = 'k', linestyle = '--', \
     label = 'starting position = ' + str(crystal) + ' Å')
 
     # standard deviation
-    plt.plot([], [], ' ', \
+    ax.plot([], [], ' ', \
     label = 'standard deviation = ' + mean_dist_std_str + ' Å')
 
     # mean
-    plt.plot([], [], ' ', label = 'mean = ' + mean_dist_mean_str + ' Å')
+    ax.plot([], [], ' ', label = 'mean = ' + mean_dist_mean_str + ' Å')
 
     # histogram with colors
     N, bin_min, patches = ax.hist(mean_dist, bins, density = True)
@@ -43,7 +42,7 @@ def plot_one_dist(mean_dist, crystal, save = False):
          np.exp(-0.5 * (1 / mean_dist_std * (bin_min - mean_dist_mean))**2))
     ax.plot(bin_min, y, '-', color = 'r', label = 'best fit')
 
-    plt.legend(loc = 'best')
+    ax.legend(loc = 'best')
     if save:
         plt.savefig('plots/all_pairs_mean_distribution.png', dpi=200)
     # return the plot object
