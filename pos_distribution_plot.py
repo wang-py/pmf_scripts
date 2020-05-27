@@ -45,7 +45,7 @@ for line in lines:
 
 # plotting
 fig, ax = plt.subplots(1, 3, sharey = True, sharex = True, figsize=(10,6))
-bins = 8
+bins = 20
 fig.suptitle("atom movement distribution in three directions")
 common_xlabel = "deviation from initial position [Å]"
 fig.text(0.5, 0.04, common_xlabel, ha='center')
