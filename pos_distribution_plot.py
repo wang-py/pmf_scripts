@@ -44,18 +44,20 @@ for line in lines:
         dz_arr.append(dz)
 
 # plotting
-fig, ax = plt.subplots(1, 3, sharey = True, sharex = True)
+fig, ax = plt.subplots(1, 3, sharey = True, sharex = True, figsize=(10,6))
 bins = 8
 fig.suptitle("atom movement distribution in three directions")
 common_xlabel = "deviation from initial position [A]"
 fig.text(0.5, 0.04, common_xlabel, ha='center')
 # distribution of dx
-ax[0].hist(dx_arr, bins)
-ax[0].set(ylabel = "Frequency")
+#ax[0].hist(dx_arr, bins)
+#ax[0].set(ylabel = "Frequency")
 # distribution of dy
-ax[1].hist(dy_arr, bins)
+#ax[1].hist(dy_arr, bins)
 # distribution of dz
-ax[2].hist(dz_arr, bins)
+#ax[2].hist(dz_arr, bins)
 # histograms with color and best fit
-plot_one_dist(dx_arr, 0, False)
+ax[0] = plot_one_dist(dx_arr, 0, False)
+ax[1] = plot_one_dist(dy_arr, 0, False)
+ax[2] = plot_one_dist(dz_arr, 0, False)
 plt.show()
