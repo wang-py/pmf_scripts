@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 
-def plot_one_dist(ax, bins, mean_dist, crystal, save = False):
+def plot_one_dist(ax, bins, mean_dist, crystal,\
+                  starting_point = True,save = False):
 
     # get standard deviation of the mean_dist's
     mean_dist_std = np.std(mean_dist)
@@ -18,8 +19,12 @@ def plot_one_dist(ax, bins, mean_dist, crystal, save = False):
     #ax.set(ylabel = 'Frequency')
 
     # crystal structure line
-    ax.axvline(crystal, color = 'k', linestyle = '--', \
-    label = 'starting position = ' + str(crystal) + ' Å')
+    if starting_point:
+        ax.axvline(crystal, color = 'k', linestyle = '--', \
+        label = 'starting position = ' + str(crystal) + ' Å')
+    else:
+        ax.axvline(mean_dist_mean, color = 'k', linestyle = '--', \
+        label = 'mean = ' + str(crystal) + ' Å')
 
     # standard deviation
     ax.plot([], [], ' ', \
