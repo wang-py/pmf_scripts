@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 
-def plot_one_dist(ax, bins, mean_dist, crystal,\
+def plot_one_dist(ax, bins, this_xlabel, mean_dist, crystal,\
                   starting_point = True,save = False):
 
     # get standard deviation of the mean_dist's
@@ -15,7 +15,8 @@ def plot_one_dist(ax, bins, mean_dist, crystal,\
 
     # plotting mean_dist distribution
     #ax.set(title = 'Distribution of movement in one direction')
-    #ax.set(xlabel = 'deviation from fixed point [Å]')
+    if this_xlabel:
+        ax.set(xlabel = this_xlabel + ' deviation from fixed point [Å]')
     #ax.set(ylabel = 'Frequency')
 
     # crystal structure line
