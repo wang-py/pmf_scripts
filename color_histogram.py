@@ -20,7 +20,7 @@ def plot_one_dist(mean_dist, crystal, save = False):
     plt.ylabel('Frequency')
 
     # crystal structure line
-    plt.axvline(crystal, color = 'k', linestyle = '--', label = 'crystal structure = ' + str(crystal) + ' Å')
+    plt.axvline(crystal, color = 'k', linestyle = '--', label = 'starting position = ' + str(crystal) + ' Å')
 
     # standard deviation
     plt.plot([], [], ' ', label = 'standard deviation = ' + mean_dist_std_str + ' Å')
@@ -45,5 +45,5 @@ def plot_one_dist(mean_dist, crystal, save = False):
     if save:
         plt.savefig('plots/all_pairs_mean_distribution.png', dpi=200)
     plt.show()
-    # return the mean and std of the distribution
-    return mean_dist_mean, mean_dist_std
+    # return the plot object
+    return ax
