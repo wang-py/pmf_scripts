@@ -23,7 +23,7 @@ DP="scale=2;"
 TS="*0.5"
 
 #headgroup carbon atom number
-ATOM_NUM=3
+ATOM_NUM=C3
 
 for (( i=$START; i<$END; i++ ))
 do
@@ -35,7 +35,7 @@ do
     echo "frame $fc: " >> $cb
 
     #find the carbon attached to the tail
-    grep '$ATOM_NUM' $fb >> $cb
+    grep -w '$ATOM_NUM' $fb >> $cb
 
     #remove framebuffer
     rm $fb
