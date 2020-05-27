@@ -24,9 +24,9 @@ init_position_str = np.array([first_entry[5], first_entry[6], first_entry[7]])
 init_position = init_position_str.astype(np.float)
 
 # data arrays for analysis
-dx_arr = np.array([])
-dy_arr = np.array([])
-dz_arr = np.array([])
+dx_arr = []
+dy_arr = []
+dz_arr = []
 
 for line in lines:
     line_entry = line.split()
@@ -36,7 +36,19 @@ for line in lines:
         curr_position_str = np.array([line_entry[5], \
         line_entry[6], line_entry[7]])
         curr_position = curr_position_str.astype(np.float)
+        # find deviations in three dimensions
         dx, dy, dz = find_position_deviation(init_position, curr_position)
-        np.append(dx_arr, dx)
-        np.append(dy_arr, dy)
-        np.append(dz_arr, dz)
+        dx_arr.append(dx)
+        dy_arr.append(dy)
+        dz_arr.append(dz)
+
+# plotting
+fig, ax = plt.subplots(3)
+bins = 8
+# distribution of dx
+ax[0].hist(dx_arr, bins)
+# distribution of dy
+ax[1].hist(dy_arr, bins)
+# distribution of dz
+ax[2].hist(dz_arr, bins)
+plt.show()
