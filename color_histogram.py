@@ -22,6 +22,8 @@ def plot_one_dist(ax, bins, mean_dist, crystal,\
     if starting_point:
         ax.axvline(crystal, color = 'k', linestyle = '--', \
         label = 'starting position = ' + str(crystal) + ' Å')
+        # mean
+        ax.plot([], [], ' ', label = 'mean = ' + mean_dist_mean_str + ' Å')
     else:
         ax.axvline(mean_dist_mean, color = 'k', linestyle = '--', \
         label = 'mean = ' + str(crystal) + ' Å')
@@ -29,9 +31,6 @@ def plot_one_dist(ax, bins, mean_dist, crystal,\
     # standard deviation
     ax.plot([], [], ' ', \
     label = 'standard deviation = ' + mean_dist_std_str + ' Å')
-
-    # mean
-    ax.plot([], [], ' ', label = 'mean = ' + mean_dist_mean_str + ' Å')
 
     # histogram with colors
     N, bin_min, patches = ax.hist(mean_dist, bins, density = True)
