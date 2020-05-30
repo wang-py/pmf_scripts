@@ -40,21 +40,21 @@ frames = frames_str.astype(np.float)
 frames = frames * 10
 frames = np.transpose(frames)
 # find deviations
-first_frame = frames[0, 0:3]
+first_frame = frames[0, 0:]
 deviations = frames - first_frame
 
 # plotting
-#fig, ax = plt.subplots(1, 3, sharey = True, sharex = True, figsize=(10,6))
-#bins = 50
-#fig.suptitle("atom movement distribution in three directions")
+fig, ax = plt.subplots(1, 3, sharey = True, sharex = True, figsize=(10,6))
+bins = 50
+fig.suptitle("atom movement distribution in three directions")
 # common_xlabel = "deviation from initial position [Å]"
 # fig.text(0.5, 0.04, common_xlabel, ha='center')
 # distribution of dx
-#ax[0].set(ylabel = "Frequency")
-#plot_one_dist(ax[0], bins, "x", dx_arr, 0, save = False)
+ax[0].set(ylabel = "Frequency")
+plot_one_dist(ax[0], bins, "x", deviations[:, 0], 0, save = False)
 # distribution of dy
-#plot_one_dist(ax[1], bins, "y", dy_arr, 0, save = False)
+plot_one_dist(ax[1], bins, "y", deviations[:, 1], 0, save = False)
 # distribution of dz
-#plot_one_dist(ax[2], bins, "z", dz_arr, 0, save = False)
+plot_one_dist(ax[2], bins, "z", deviations[:, 2], 0, save = False)
 
-#plt.show()
+plt.show()
