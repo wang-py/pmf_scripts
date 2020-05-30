@@ -22,6 +22,7 @@ x_arr = []
 y_arr = []
 z_arr = []
 
+# data entry
 for line in lines:
     line_entry = line.split()
     # skip comments
@@ -37,6 +38,10 @@ frames_str = np.array([x_arr, y_arr, z_arr])
 frames = frames_str.astype(np.float)
 # convert to Angstroms
 frames = frames * 10
+frames = np.transpose(frames)
+# find deviations
+first_frame = frames[0, 0:3]
+deviations = frames - first_frame
 
 # plotting
 #fig, ax = plt.subplots(1, 3, sharey = True, sharex = True, figsize=(10,6))
