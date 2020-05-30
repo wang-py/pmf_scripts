@@ -38,7 +38,7 @@ for line in lines:
         z_arr.append(line_entry[3])
 
 # numpy array of frames
-frames_str = np.array(x_arr, y_arr, z_arr)
+frames_str = np.array([x_arr, y_arr, z_arr])
 frames = frames_str.astype(np.float)
 # convert to Angstroms
 frames = frames * 10
