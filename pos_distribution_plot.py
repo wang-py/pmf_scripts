@@ -18,20 +18,20 @@ xvg_file = open(sys.argv[1], 'r')
 lines = xvg_file.readlines()
 
 # initial position of atom
-first_entry = lines[1].split()
-init_position_str = np.array([first_entry[1], first_entry[2], first_entry[3]])
-init_position = init_position_str.astype(np.float)
+#first_entry = lines[1].split()
+#init_position_str = np.array([first_entry[1], first_entry[2], first_entry[3]])
+#init_position = init_position_str.astype(np.float)
 
 # data arrays for analysis
 x_arr = []
 y_arr = []
-z_arr = []#
+z_arr = []
 
 for line in lines:
     line_entry = line.split()
     # skip comments
     first_charactor = line_entry[0]
-    if first_charactor != "#" | first_charactor != "@":
+    if first_charactor != "#" || first_charactor != "@":
         # read data
         x_arr.append(line[1])
         y_arr.append(line[2])
