@@ -21,7 +21,7 @@ lines = coor_buffer.readlines()
 
 # initial position of atom
 first_entry = lines[1].split()
-init_position_str = np.array([first_entry[5], first_entry[6], first_entry[7]])
+init_position_str = np.array([first_entry[1], first_entry[2], first_entry[3]])
 init_position = init_position_str.astype(np.float)
 
 # data arrays for analysis
@@ -31,11 +31,12 @@ dz_arr = []
 
 for line in lines:
     line_entry = line.split()
-    # skip frame index
-    if line_entry[0] != "frame":
+    # skip comments
+    first_charactor = line_entry[0]
+    if first_charactor != "#" | first_charactor != "@":
         # process data
-        curr_position_str = np.array([line_entry[5], \
-        line_entry[6], line_entry[7]])
+        curr_position_str = np.array([line_entry[1], \
+        line_entry[2], line_entry[3]])
         curr_position = curr_position_str.astype(np.float)
         # find deviations in three dimensions
         dx, dy, dz = find_position_deviation(init_position, curr_position)
