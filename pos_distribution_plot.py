@@ -14,10 +14,8 @@ def find_position_deviation(p0, pn):
     return dx, dy, dz
 
 # read file from command line
-coor_buffer_file = sys.argv[1]
-
-coor_buffer = open(coor_buffer_file, 'r')
-lines = coor_buffer.readlines()
+xvg_file = open(sys.argv[1], 'r')
+lines = xvg_file.readlines()
 
 # initial position of atom
 first_entry = lines[1].split()
