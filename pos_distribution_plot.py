@@ -17,6 +17,9 @@ def find_position_deviation(p0, pn):
 xvg_file = open(sys.argv[1], 'r')
 lines = xvg_file.readlines()
 
+# customize title
+fig_title = sys.argv[2]
+
 # data arrays for analysis
 x_arr = []
 y_arr = []
@@ -46,7 +49,7 @@ deviations = frames - first_frame
 # plotting
 fig, ax = plt.subplots(1, 3, sharey = True, sharex = True, figsize=(10,6))
 bins = 50
-fig.suptitle("atom movement distribution in three directions")
+fig.suptitle("atom movement distribution in three directions " + fig_title)
 # common_xlabel = "deviation from initial position [Å]"
 # fig.text(0.5, 0.04, common_xlabel, ha='center')
 # distribution of dx
