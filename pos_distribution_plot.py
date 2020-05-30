@@ -39,7 +39,9 @@ for line in lines:
 
 # numpy array of frames
 frames_str = np.array(x_arr, y_arr, z_arr)
-frames = frames_str.astype(float)
+frames = frames_str.astype(np.float)
+# convert to Angstroms
+frames = frames * 10
 
 # plotting
 #fig, ax = plt.subplots(1, 3, sharey = True, sharex = True, figsize=(10,6))
