@@ -31,7 +31,7 @@ for line in lines:
     line_entry = line.split()
     # skip comments
     first_charactor = line_entry[0]
-    if first_charactor != "#" || first_charactor != "@":
+    if first_charactor != '#' or first_charactor != '@':
         # read data
         x_arr.append(line[1])
         y_arr.append(line[2])
