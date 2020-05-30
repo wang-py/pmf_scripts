@@ -17,11 +17,6 @@ def find_position_deviation(p0, pn):
 xvg_file = open(sys.argv[1], 'r')
 lines = xvg_file.readlines()
 
-# initial position of atom
-#first_entry = lines[1].split()
-#init_position_str = np.array([first_entry[1], first_entry[2], first_entry[3]])
-#init_position = init_position_str.astype(np.float)
-
 # data arrays for analysis
 x_arr = []
 y_arr = []
