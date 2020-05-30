@@ -38,7 +38,8 @@ for line in lines:
         z_arr.append(line_entry[3])
 
 # numpy array of frames
-frames = np.array(x_arr, y_arr, z_arr)
+frames_str = np.array(x_arr, y_arr, z_arr)
+frames = frames_str.astype(float)
 
 # plotting
 #fig, ax = plt.subplots(1, 3, sharey = True, sharex = True, figsize=(10,6))
