@@ -31,11 +31,11 @@ for line in lines:
     line_entry = line.split()
     # skip comments
     first_charactor = line_entry[0]
-    if first_charactor != '#' or first_charactor != '@':
+    if first_charactor != '#' and first_charactor != '@':
         # read data
-        x_arr.append(line[1])
-        y_arr.append(line[2])
-        z_arr.append(line[3])
+        x_arr.append(line_entry[1])
+        y_arr.append(line_entry[2])
+        z_arr.append(line_entry[3])
 
 # numpy array of frames
 frames = np.array(x_arr, y_arr, z_arr)
