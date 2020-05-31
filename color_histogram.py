@@ -50,4 +50,4 @@ def plot_one_dist(ax, bins, this_xlabel, mean_dist, crystal,\
     if save:
         plt.savefig('plots/all_pairs_mean_distribution.png', dpi=200)
     # return the plot object
-    return ax
+    return mean_dist_mean
