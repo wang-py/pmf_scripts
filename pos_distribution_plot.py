@@ -50,14 +50,17 @@ deviations = frames - first_frame
 fig, ax = plt.subplots(1, 3, sharey = True, sharex = True, figsize=(10,6))
 bins = 50
 fig.suptitle("atom movement distribution in three directions " + fig_title)
-# common_xlabel = "deviation from initial position [Å]"
-# fig.text(0.5, 0.04, common_xlabel, ha='center')
 # distribution of dx
 ax[0].set(ylabel = "Frequency")
-plot_one_dist(ax[0], bins, "x", deviations[:, 0], 0, save = False)
+mean_dx = plot_one_dist(ax[0], bins, "x", deviations[:, 0], 0, save = False)
 # distribution of dy
-plot_one_dist(ax[1], bins, "y", deviations[:, 1], 0, save = False)
+mean_dy = plot_one_dist(ax[1], bins, "y", deviations[:, 1], 0, save = False)
 # distribution of dz
-plot_one_dist(ax[2], bins, "z", deviations[:, 2], 0, save = False)
+mean_dz = plot_one_dist(ax[2], bins, "z", deviations[:, 2], 0, save = False)
+
+# added dr^2
+dr_2 = mean_dx ** 2 + mean_dy ** 2 + mean_dz ** 2
+common_xlabel = "dr^2 = " + f"{dr_2:.2f}" + " [Å^2]"
+fig.text(0.5, 0.04, common_xlabel, ha='center')
 
 plt.show()
