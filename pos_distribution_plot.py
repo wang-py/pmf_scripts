@@ -63,4 +63,7 @@ dr_2 = mean_dx ** 2 + mean_dy ** 2 + mean_dz ** 2
 common_xlabel = "dr^2 = " + f"{dr_2:.2f}" + " [Å^2]"
 fig.text(0.5, 0.04, common_xlabel, ha='center')
 
+# option to save figure
+plt.savefig(fig_title+".png", dpi=200)
+
 plt.show()
