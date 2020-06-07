@@ -1,3 +1,21 @@
 #!/bin/bash
 
-# this script plots all displacement distributions and save those figures
+# this script plots all displacement distributions and saves those figures
+
+# folder that contains all xvgs
+WINDOWS=$1
+
+# plotting script
+PLOT_SCRIPT=pos_distribution_plot.py
+
+for window in $WINDOWS/*
+do
+  # get rid of parent paths
+  name=$(basename $window)
+
+  # get rid of extensions
+  filename=${window%.gro}
+
+  python $PLOT_SCRIPT $window $filename
+  
+done
