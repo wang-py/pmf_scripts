@@ -14,8 +14,8 @@ do
   name=$(basename $window)
 
   # get rid of extensions
-  filename=${window%.gro}
+  filename=${name%.xvg}
 
   python $PLOT_SCRIPT $window $filename
-  
+
 done
