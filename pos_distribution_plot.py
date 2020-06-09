@@ -18,7 +18,10 @@ xvg_file = open(sys.argv[1], 'r')
 lines = xvg_file.readlines()
 
 # customize title
-fig_title = sys.argv[2]
+if len(sys.argv) > 2:
+    fig_title = sys.argv[2]
+else:
+    fig_title = ""
 
 # data arrays for analysis
 x_arr = []
