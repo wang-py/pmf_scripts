@@ -9,6 +9,12 @@ import sys
 xvg_file = open(sys.argv[1], 'r')
 lines = xvg_file.readlines()
 
+# customize title
+if len(sys.argv) > 2:
+    fig_title = sys.argv[2]
+else:
+    fig_title = ""
+
 # data arrays for analysis
 
 # pulling force at each time step
@@ -39,7 +45,7 @@ energy = np.cumsum(energy_one_sum)
 
 # pull force and pulling energy
 fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
-fig.suptitle("pulling force and energy along the trajectory")
+fig.suptitle("pulling force and energy along the trajectory " + fig_title)
 
 # pull force
 ax[0].scatter(time, force, s = 2)
