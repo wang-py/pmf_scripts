@@ -47,7 +47,7 @@ first_frame = frames[0, 0:]
 deviations = frames - first_frame
 
 # plotting
-fig, ax = plt.subplots(1, 3, sharey = False, sharex = True, figsize=(10,6))
+fig, ax = plt.subplots(1, 3, sharey = False, sharex = True, figsize=(14,10))
 bins = 50
 fig.suptitle("atom movement distribution in three directions " + fig_title)
 # distribution of dx
@@ -66,4 +66,4 @@ fig.text(0.5, 0.04, common_xlabel, ha='center')
 # option to save figure
 plt.savefig(fig_title+".png", dpi=200)
 
-plt.show()
+#plt.show()
