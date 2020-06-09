@@ -33,6 +33,10 @@ for line in lines:
         force.append(float(line_entry[1]))
         time.append(float(line_entry[0]))
 
+# energy calculation
+energy_one_sum = np.array(force) * dt
+energy = np.cumsum(energy_one_sum)
+
 # pull force and pulling energy
 fig, ax = plt.subplots(2, 1, sharex=True, figsize=(12,10))
 fig.suptitle("pulling force and energy along the trajectory")
@@ -42,6 +46,7 @@ ax[0].scatter(time, force, s = 2)
 ax[0].set(ylabel = "Force [kJ/mol/nm]")
 
 # pull energy
+ax[1].scatter(time, energy, s = 2)
 ax[1].set(ylabel = "Energy [kJ/mol]")
 ax[1].set(xlabel = "time [ps]")
 
