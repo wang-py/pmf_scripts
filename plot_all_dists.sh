@@ -17,5 +17,6 @@ do
   filename=${name%.xvg}
 
   python $PLOT_SCRIPT $window $filename
+  mv $filename.png $WINDOWS
 
 done
