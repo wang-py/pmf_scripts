@@ -14,47 +14,56 @@ def find_position_deviation(p0, pn):
     return dx, dy, dz
 
 # read file from command line
-coor_buffer_file = sys.argv[1]
+xvg_file = open(sys.argv[1], 'r')
+lines = xvg_file.readlines()
 
-coor_buffer = open(coor_buffer_file, 'r')
-lines = coor_buffer.readlines()
-
-# initial position of atom
-first_entry = lines[1].split()
-init_position_str = np.array([first_entry[5], first_entry[6], first_entry[7]])
-init_position = init_position_str.astype(np.float)
+# customize title
+fig_title = sys.argv[2]
 
 # data arrays for analysis
-dx_arr = []
-dy_arr = []
-dz_arr = []
+x_arr = []
+y_arr = []
+z_arr = []
 
+# data entry
 for line in lines:
     line_entry = line.split()
-    # skip frame index
-    if line_entry[0] != "frame":
-        # process data
-        curr_position_str = np.array([line_entry[5], \
-        line_entry[6], line_entry[7]])
-        curr_position = curr_position_str.astype(np.float)
-        # find deviations in three dimensions
-        dx, dy, dz = find_position_deviation(init_position, curr_position)
-        dx_arr.append(dx)
-        dy_arr.append(dy)
-        dz_arr.append(dz)
+    # skip comments
+    first_charactor = line_entry[0]
+    if first_charactor[0] != '#' and first_charactor[0] != '@':
+        # read data
+        x_arr.append(line_entry[1])
+        y_arr.append(line_entry[2])
+        z_arr.append(line_entry[3])
+
+# numpy array of frames
+frames_str = np.array([x_arr, y_arr, z_arr])
+frames = frames_str.astype(np.float)
+# convert to Angstroms
+frames = frames * 10
+frames = np.transpose(frames)
+# find deviations
+first_frame = frames[0, 0:]
+deviations = frames - first_frame
 
 # plotting
-fig, ax = plt.subplots(1, 3, sharey = True, sharex = True, figsize=(10,6))
+fig, ax = plt.subplots(1, 3, sharey = False, sharex = True, figsize=(14,10))
 bins = 50
-fig.suptitle("atom movement distribution in three directions")
-# common_xlabel = "deviation from initial position [Å]"
-# fig.text(0.5, 0.04, common_xlabel, ha='center')
+fig.suptitle("atom movement distribution in three directions " + fig_title)
 # distribution of dx
 ax[0].set(ylabel = "Frequency")
-plot_one_dist(ax[0], bins, "x", dx_arr, 0, save = False)
+mean_dx = plot_one_dist(ax[0], bins, "x", deviations[:, 0], 0, save = False)
 # distribution of dy
-plot_one_dist(ax[1], bins, "y", dy_arr, 0, save = False)
+mean_dy = plot_one_dist(ax[1], bins, "y", deviations[:, 1], 0, save = False)
 # distribution of dz
-plot_one_dist(ax[2], bins, "z", dz_arr, 0, save = False)
+mean_dz = plot_one_dist(ax[2], bins, "z", deviations[:, 2], 0, save = False)
 
-plt.show()
+# added dr^2
+dr_2 = mean_dx ** 2 + mean_dy ** 2 + mean_dz ** 2
+common_xlabel = "dr^2 = " + f"{dr_2:.2f}" + " [Å^2]"
+fig.text(0.5, 0.04, common_xlabel, ha='center')
+
+# option to save figure
+plt.savefig(fig_title+".png", dpi=200)
+
+#plt.show()
