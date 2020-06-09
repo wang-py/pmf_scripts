@@ -32,3 +32,6 @@ for line in lines:
         # read data
         force.append(float(line_entry[1]))
         time.append(float(line_entry[0]))
+
+plt.scatter(time, force, s = 2)
+plt.show()
