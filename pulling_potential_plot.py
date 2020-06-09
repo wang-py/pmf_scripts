@@ -38,7 +38,7 @@ energy_one_sum = np.array(force) * dt
 energy = np.cumsum(energy_one_sum)
 
 # pull force and pulling energy
-fig, ax = plt.subplots(2, 1, sharex=True, figsize=(12,10))
+fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
 fig.suptitle("pulling force and energy along the trajectory")
 
 # pull force
