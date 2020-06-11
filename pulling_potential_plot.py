@@ -11,7 +11,7 @@ xvg_file = open(sys.argv[1], 'r')
 lines = xvg_file.readlines()
 
 # customize title
-if len(sys.argv) > 2:
+if len(sys.argv) > 3:
     fig_title = sys.argv[3]
 else:
     fig_title = ""
@@ -41,7 +41,7 @@ for line in lines:
         time.append(float(line_entry[0]))
 
 # window
-N = 10 / dt
+N = int(0.1 / velocity / dt)
 
 # moving mean
 move_mean = np.convolve(force, np.ones((N,))/N, mode = 'same')
