@@ -12,7 +12,7 @@ lines = xvg_file.readlines()
 
 # customize title
 if len(sys.argv) > 2:
-    fig_title = sys.argv[2]
+    fig_title = sys.argv[3]
 else:
     fig_title = ""
 
@@ -22,7 +22,7 @@ else:
 force = [] #kJ/mol/nm
 
 # pulling velocity, assumed to be constant
-velocity = 0.01 #nm/ps
+velocity = sys.argv[2] #nm/ps
 
 # time step dt, constant
 dt = 0.05 #ps
@@ -67,7 +67,7 @@ ax[0].set(ylabel = "Force [kJ/mol/nm]")
 
 # pull energy
 ax[1].scatter(time[N-1:-N], energy[N-1:-N], s = 2)
-ax[1].set(ylabel = "Energy [kJ/mol]")
+ax[1].set(ylabel = "Work [kJ/mol]")
 ax[1].set(xlabel = "time [ps]")
 
 ax[0].legend(loc = 'best')
