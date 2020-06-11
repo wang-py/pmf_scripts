@@ -22,7 +22,7 @@ else:
 force = [] #kJ/mol/nm
 
 # pulling velocity, assumed to be constant
-velocity = sys.argv[2] #nm/ps
+velocity = float(sys.argv[2]) #nm/ps
 
 # time step dt, constant
 dt = 0.05 #ps
@@ -41,7 +41,7 @@ for line in lines:
         time.append(float(line_entry[0]))
 
 # window
-N = 200
+N = 10 / dt
 
 # moving mean
 move_mean = np.convolve(force, np.ones((N,))/N, mode = 'same')
