@@ -24,9 +24,6 @@ force = [] #kJ/mol/nm
 # pulling velocity, assumed to be constant
 velocity = float(sys.argv[2]) #nm/ps
 
-# time step dt, constant
-dt = 0.05 #ps
-
 # time
 time = [] #ps
 
@@ -39,6 +36,9 @@ for line in lines:
         # read data
         force.append(float(line_entry[1]))
         time.append(float(line_entry[0]))
+
+# time step dt, constant
+dt = time[1] - time[0] #ps
 
 # window
 N = int(0.1 / velocity / dt)
