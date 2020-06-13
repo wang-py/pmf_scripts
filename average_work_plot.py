@@ -32,13 +32,18 @@ def get_one_work(one_xvg, velocity):
     work = calculate_work(time, move_mean, velocity)
 
     return time, N, work
+# plotting function
+# time: array of time steps
+# N: moving average window
+# runs: number of runs
+# mean_work: average work calculated using standard averaging
+# jarzynski_work: average work calculated using Jarzynski equation
+# save_figure: option to save figure as a PNG
 
-def plot_average_work(time, N, mean_work, jarzynski_work, save_figure=False):
+def plot_average_work(time, N, runs, mean_work, jarzynski_work, save_figure=False):
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
-    fig.suptitle("mean work and Jarzynski mean work along the trajectory " + fig_title)
-
-    runs = 20
+    fig.suptitle("mean work and Jarzynski mean work along the trajectory " + fig_title) 
     
     # mean work
     ax[0].plot(time[N-1:-N], mean_work[N-1:-N], \
@@ -73,5 +78,6 @@ for file in os.scandir(directory):
         one_time, N, one_work = get_one_work(filename, velocity)
         work_runs.append(one_work)
 
+num_of_runs = len(work_runs)
 mean_work = np.mean(work_runs, axis=0)
-plot_average_work(one_time, N, mean_work, mean_work, save_figure=False)
+plot_average_work(one_time, N, num_of_runs, mean_work, mean_work, save_figure=False)
