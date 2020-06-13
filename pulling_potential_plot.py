@@ -34,15 +34,15 @@ def calculate_work(time, move_mean, velocity):
     # time step dt, constant
     dt = time[1] - time[0] #ps
     
-    # energy calculation
-    energy_one_sum = move_mean * dt * velocity
-    energy = np.cumsum(energy_one_sum)
-    return energy
+    # work calculation
+    work_one_sum = move_mean * dt * velocity
+    work = np.cumsum(work_one_sum)
+    return work
 
-def plotting(time, force, move_mean, energy, N, save_figure=False):
-    # pull force and pulling energy
+def plotting(time, force, move_mean, work, N, save_figure=False):
+    # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
-    fig.suptitle("pulling force and energy along the trajectory " + fig_title)
+    fig.suptitle("pulling force and work along the trajectory " + fig_title)
     
     # pull force
     ax[0].scatter(time, force, s = 2)
@@ -51,8 +51,8 @@ def plotting(time, force, move_mean, energy, N, save_figure=False):
                label = "moving average over " + str(N*dt) + " ps")
     ax[0].set(ylabel = "Force [kJ/mol/nm]")
     
-    # pull energy
-    ax[1].scatter(time[N-1:-N], energy[N-1:-N], s = 2)
+    # pull work
+    ax[1].scatter(time[N-1:-N], work[N-1:-N], s = 2)
     ax[1].set(ylabel = "Work [kJ/mol]")
     ax[1].set(xlabel = "time [ps]")
     
