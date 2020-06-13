@@ -27,6 +27,32 @@ def get_one_work(one_xvg, velocity):
 
     return work
 
+def plot_average_work(time, mean_work, jarzynsky_work, save_figure=False):
+    # pull force and pulling work
+    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
+    fig.suptitle("mean work and Jarzynsky mean work along the trajectory " + fig_title)
+
+    runs = 20
+    
+    # mean work
+    ax[0].plot(time[N-1:-N], mean_work[N-1:-N], \
+               label = "average work over " + str(runs) + " runs")
+    ax[0].set(ylabel = "Work [kJ/mol]")
+    
+    # Jayzynsky mean work
+    ax[1].plot(time[N-1:-N], work[N-1:-N], \
+               label = "Jarzynsky average work over " + str(runs) + " runs")
+    ax[1].set(ylabel = "Work [kJ/mol]")
+    ax[1].set(xlabel = "time [ps]")
+    
+    ax[0].legend(loc = 'best')
+    # option to save figure
+    if save_figure:
+        plt.savefig(fig_title+".png", dpi=200)
+    else:
+        plt.show()
+
+
 # data structure that contains all runs
 work_runs = np.array([])
 
