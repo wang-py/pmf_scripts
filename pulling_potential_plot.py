@@ -82,7 +82,8 @@ if __name__ == "__main__":
     dt = time[1] - time[0]
 
     # moving mean window
-    N = int(0.1 / velocity / dt)
+    time_window = 0.1 #ns or 100 ps
+    N = int(time_window / velocity / dt)
     move_mean = get_average_force(force, N)
     work = calculate_work(time, move_mean, velocity)
     plotting(time, force, move_mean, work, N, save_figure=False)
