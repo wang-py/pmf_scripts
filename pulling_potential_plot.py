@@ -7,6 +7,13 @@ import pandas as pd
 import sys
 
 def read_inputs(lines):
+    # data arrays for analysis
+    # pulling force at each time step
+    force = [] #kJ/mol/nm
+    
+    # time
+    time = [] #ps
+    
     # data entry
     for line in lines:
         line_entry = line.split()
@@ -18,15 +25,7 @@ def read_inputs(lines):
             time.append(float(line_entry[0]))
     return time, force
 
-def calculate_work(lines, velocity):
-    # data arrays for analysis
-    # pulling force at each time step
-    force = [] #kJ/mol/nm
-    
-    # time
-    time = [] #ps
-    
-    
+def calculate_work(time, force, velocity):
     # time step dt, constant
     dt = time[1] - time[0] #ps
     
@@ -43,7 +42,7 @@ def calculate_work(lines, velocity):
     # energy calculation
     energy_one_sum = move_mean * dt * velocity
     energy = np.cumsum(energy_one_sum)
-    return time, force, energy
+    return energy
 
 def plotting(time, force, energy, save_figure=False):
     # pull force and pulling energy
@@ -82,5 +81,5 @@ if __name__ == "__main__":
 
     # pulling velocity, assumed to be constant
     velocity = float(sys.argv[2]) #nm/ps
-    time, force, work = calculate_work(lines, velocity)
+    time, force = read_inputs(lines)
     plotting(time, force, work, save_figure=False)
