@@ -25,7 +25,7 @@ def read_inputs(lines):
             time.append(float(line_entry[0]))
     return time, force
 
-def average_force(force, N):
+def get_average_force(force, N):
     # moving mean
     move_mean = np.convolve(force, np.ones((N,))/N, mode = 'same')
     return move_mean
@@ -34,15 +34,12 @@ def calculate_work(time, move_mean, velocity):
     # time step dt, constant
     dt = time[1] - time[0] #ps
     
-    # window
-    N = int(0.1 / velocity / dt)
-    
     # energy calculation
     energy_one_sum = move_mean * dt * velocity
     energy = np.cumsum(energy_one_sum)
-    return energy, N
+    return energy
 
-def plotting(time, force, energy, N, save_figure=False):
+def plotting(time, force, move_mean, energy, N, save_figure=False):
     # pull force and pulling energy
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
     fig.suptitle("pulling force and energy along the trajectory " + fig_title)
@@ -79,6 +76,13 @@ if __name__ == "__main__":
 
     # pulling velocity, assumed to be constant
     velocity = float(sys.argv[2]) #nm/ps
+
+    # reading from xvg
     time, force = read_inputs(lines)
-    work, N = calculate_work(time, force, velocity)
-    plotting(time, force, work, N, save_figure=False)
+    dt = time[1] - time[0]
+
+    # moving mean window
+    N = int(0.1 / velocity / dt)
+    move_mean = get_average_force(force, N)
+    work = calculate_work(time, move_mean, velocity)
+    plotting(time, force, move_mean, work, N, save_figure=False)
