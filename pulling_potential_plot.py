@@ -67,6 +67,9 @@ if __name__ == "__main__":
     # read file from command line
     xvg_file = open(sys.argv[1], 'r')
     lines = xvg_file.readlines()
+
+    # option to save as png
+#TODO    save_figure = bool(sys.argv[3])
     
     # customize title
     if len(sys.argv) > 3:
