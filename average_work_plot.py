@@ -9,12 +9,12 @@ import os
 from pulling_potential_plot import *
 
 xvg_folder = sys.argv[1]
+
 # customize title
 if len(sys.argv) > 3:
     fig_title = sys.argv[3]
 else:
     fig_title = ""
-
 
 directory = os.fsencode(xvg_folder)
 
@@ -32,6 +32,21 @@ def get_one_work(one_xvg, velocity):
     work = calculate_work(time, move_mean, velocity)
 
     return time, N, work
+
+def get_jarzynski_work(work_runs):
+    R = 8.314 #J/K/mol
+    T = 310 #K
+    RT = R * T / 1000 #convert RT to kJ/mol
+    work_runs_exp = []
+    for one_run in work_runs:
+        one_run_exp = np.exp(-one_run / RT)
+        work_runs_exp.append(one_run_exp)
+
+    mean_work_runs_exp = np.mean(work_runs_exp, axis=0)
+    jarzynski_work = np.log(mean_work_runs_exp) * -RT
+
+    return jarzynski_work
+
 # plotting function
 # time: array of time steps
 # N: moving average window
@@ -64,7 +79,6 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, save_figure=Fals
     else:
         plt.show()
 
-
 # data structure that contains all runs
 work_runs = []
 
@@ -79,5 +93,7 @@ for file in os.scandir(directory):
         work_runs.append(one_work)
 
 num_of_runs = len(work_runs)
+# standard mean work
 mean_work = np.mean(work_runs, axis=0)
-plot_average_work(one_time, N, num_of_runs, mean_work, mean_work, save_figure=False)
+jarzynski_work = get_jarzynski_work(work_runs)
+plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, save_figure=False)
