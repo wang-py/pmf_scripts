@@ -6,14 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 
-def calculate_work(lines, velocity):
-    # data arrays for analysis
-    # pulling force at each time step
-    force = [] #kJ/mol/nm
-    
-    # time
-    time = [] #ps
-    
+def read_inputs(lines):
     # data entry
     for line in lines:
         line_entry = line.split()
@@ -23,6 +16,16 @@ def calculate_work(lines, velocity):
             # read data
             force.append(float(line_entry[1]))
             time.append(float(line_entry[0]))
+    return time, force
+
+def calculate_work(lines, velocity):
+    # data arrays for analysis
+    # pulling force at each time step
+    force = [] #kJ/mol/nm
+    
+    # time
+    time = [] #ps
+    
     
     # time step dt, constant
     dt = time[1] - time[0] #ps
