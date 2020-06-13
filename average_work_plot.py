@@ -44,14 +44,15 @@ def plot_average_work(time, N, mean_work, jarzynsky_work, save_figure=False):
     ax[0].plot(time[N-1:-N], mean_work[N-1:-N], \
                label = "average work over " + str(runs) + " runs")
     ax[0].set(ylabel = "Work [kJ/mol]")
+    ax[0].legend(loc = 'best')
     
     # Jayzynsky mean work
-    ax[1].plot(time[N-1:-N], work[N-1:-N], \
+    ax[1].plot(time[N-1:-N], jarzynsky_work[N-1:-N], \
                label = "Jarzynsky average work over " + str(runs) + " runs")
     ax[1].set(ylabel = "Work [kJ/mol]")
     ax[1].set(xlabel = "time [ps]")
-    
-    ax[0].legend(loc = 'best')
+    ax[1].legend(loc = 'best')
+
     # option to save figure
     if save_figure:
         plt.savefig(fig_title+".png", dpi=200)
