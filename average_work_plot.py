@@ -25,7 +25,7 @@ def get_one_work(one_xvg, velocity):
     move_mean = get_average_force(force, N)
     work = calculate_work(time, move_mean, velocity)
 
-    return time, work
+    return work
 
 # data structure that contains all runs
 work_runs = np.array([])
