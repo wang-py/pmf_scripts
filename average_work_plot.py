@@ -9,6 +9,12 @@ import os
 from pulling_potential_plot import *
 
 xvg_folder = sys.argv[1]
+# customize title
+if len(sys.argv) > 3:
+    fig_title = sys.argv[3]
+else:
+    fig_title = ""
+
 
 directory = os.fsencode(xvg_folder)
 
@@ -25,9 +31,9 @@ def get_one_work(one_xvg, velocity):
     move_mean = get_average_force(force, N)
     work = calculate_work(time, move_mean, velocity)
 
-    return work
+    return time, N, work
 
-def plot_average_work(time, mean_work, jarzynsky_work, save_figure=False):
+def plot_average_work(time, N, mean_work, jarzynsky_work, save_figure=False):
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
     fig.suptitle("mean work and Jarzynsky mean work along the trajectory " + fig_title)
@@ -54,7 +60,7 @@ def plot_average_work(time, mean_work, jarzynsky_work, save_figure=False):
 
 
 # data structure that contains all runs
-work_runs = np.array([])
+work_runs = []
 
 # pulling rate
 velocity = float(sys.argv[2])
@@ -63,5 +69,8 @@ for file in os.scandir(directory):
     filename = os.fsdecode(file)
      # only reads xvgs
     if filename.endswith(".xvg"): 
-        one_work = get_one_work(filename, velocity)
-        work_runs = np.append(work_runs, one_work)
+        one_time, N, one_work = get_one_work(filename, velocity)
+        work_runs.append(one_work)
+
+mean_work = np.mean(work_runs, axis=0)
+plot_average_work(one_time, N, mean_work, mean_work, save_figure=False)
