@@ -32,7 +32,7 @@ for line in lines:
     line_entry = line.split()
     # skip comments
     first_charactor = line_entry[0]
-    if first_charactor[0] != '#' and first_charactor[0] != '@':
+    if first_charactor[0] != '#' and first_charactor[0] != '@' and len(line_entry) > 1:
         # read data
         force.append(float(line_entry[1]))
         time.append(float(line_entry[0]))
@@ -71,4 +71,7 @@ ax[1].set(ylabel = "Work [kJ/mol]")
 ax[1].set(xlabel = "time [ps]")
 
 ax[0].legend(loc = 'best')
-plt.show()
+# option to save figure
+plt.savefig(fig_title+".png", dpi=200)
+
+#plt.show()
