@@ -33,10 +33,10 @@ def get_one_work(one_xvg, velocity):
 
     return time, N, work
 
-def plot_average_work(time, N, mean_work, jarzynsky_work, save_figure=False):
+def plot_average_work(time, N, mean_work, jarzynski_work, save_figure=False):
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
-    fig.suptitle("mean work and Jarzynsky mean work along the trajectory " + fig_title)
+    fig.suptitle("mean work and Jarzynski mean work along the trajectory " + fig_title)
 
     runs = 20
     
@@ -47,8 +47,8 @@ def plot_average_work(time, N, mean_work, jarzynsky_work, save_figure=False):
     ax[0].legend(loc = 'best')
     
     # Jayzynsky mean work
-    ax[1].plot(time[N-1:-N], jarzynsky_work[N-1:-N], \
-               label = "Jarzynsky average work over " + str(runs) + " runs")
+    ax[1].plot(time[N-1:-N], jarzynski_work[N-1:-N], \
+               label = "Jarzynski average work over " + str(runs) + " runs")
     ax[1].set(ylabel = "Work [kJ/mol]")
     ax[1].set(xlabel = "time [ps]")
     ax[1].legend(loc = 'best')
