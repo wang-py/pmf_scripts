@@ -58,7 +58,7 @@ def get_jarzynski_work(work_runs):
 def plot_average_work(time, N, runs, mean_work, jarzynski_work, save_figure=False):
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
-    fig.suptitle("mean work and Jarzynski mean work along the trajectory " + fig_title) 
+    fig.suptitle("average work and Jarzynski average work along the trajectory " + fig_title) 
     
     # mean work
     ax[0].plot(time[N-1:-N], mean_work[N-1:-N], \
