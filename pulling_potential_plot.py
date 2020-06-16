@@ -28,6 +28,7 @@ def read_inputs(lines):
 def get_average_force(force, N):
     # moving mean
     move_mean = np.convolve(force, np.ones((N,))/N, mode = 'same')
+    # pd.Series(force).rolling(N).mean()
     return move_mean
 
 def calculate_work(time, move_mean, velocity):
@@ -69,11 +70,11 @@ if __name__ == "__main__":
     lines = xvg_file.readlines()
 
     # option to save as png
-#TODO    save_figure = bool(sys.argv[3])
+    save_figure = bool(int(sys.argv[3]))
     
     # customize title
-    if len(sys.argv) > 3:
-        fig_title = sys.argv[3]
+    if len(sys.argv) > 4:
+        fig_title = sys.argv[4]
     else:
         fig_title = ""
 
@@ -89,4 +90,4 @@ if __name__ == "__main__":
     N = int(time_window / velocity / dt)
     move_mean = get_average_force(force, N)
     work = calculate_work(time, move_mean, velocity)
-    plotting(time, force, move_mean, work, N, save_figure=False)
+    plotting(time, force, move_mean, work, N, save_figure)
