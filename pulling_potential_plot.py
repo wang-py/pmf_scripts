@@ -33,7 +33,7 @@ def get_average_force(force, N):
 
 # this function finds the time step when searching is over
 def find_end_of_search(time, mean_force):
-    index = np.where(mean_force == np.amax(mean_force))
+    index = np.where(mean_force == np.amax(mean_force))[0][0]
     time_step = time[index]
     return time_step;
 
@@ -73,6 +73,8 @@ def plotting(time, force, move_mean, work, N, save_figure=False):
     ax[0].plot(time[N-1:-N], move_mean[N-1:-N], 'r', \
                label = "moving average over " + str(N*dt) + " ps")
     ax[0].set(ylabel = "Force [kJ/mol/nm]")
+    # plottind end of search
+    plot_end_of_search(bottom, end_of_search)
     
     # pull work
     ax[1].scatter(time[N-1:-N], work[N-1:-N], s = 2)
