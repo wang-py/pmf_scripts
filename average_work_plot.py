@@ -33,6 +33,16 @@ def get_one_work(one_xvg, velocity):
 
     return time, N, work
 
+def get_average_search_work(work_runs):
+    # array for all search work
+    search_work_arr = []
+    for one_run in work_runs:
+        ,one_run_search_work = find_end_of_search(mean_force, one_run)
+        search_work_arr.append(one_run_search_work)
+
+    average_search_work = np.mean(search_work_arr)
+    return average_search_work
+
 def get_jarzynski_work(work_runs):
     R = 8.314 #J/K/mol
     T = 310 #K
