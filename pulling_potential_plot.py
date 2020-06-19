@@ -32,10 +32,11 @@ def get_average_force(force, N):
     return move_mean
 
 # this function finds the time step when searching is over
-def find_end_of_search(time, mean_force):
+def find_end_of_search(time, mean_force, work):
     index = np.where(mean_force == np.amax(mean_force))[0][0]
     time_step = time[index]
-    return time_step;
+    total_work = work[index]
+    return time_step, total_work;
 
 # this function plots a vertical dotted line to indicate the end of searching
 def plot_end_of_search(bottom, time_step, work, ax, show_text=True):
