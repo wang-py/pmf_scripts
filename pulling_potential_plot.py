@@ -31,6 +31,22 @@ def get_average_force(force, N):
     # pd.Series(force).rolling(N).mean()
     return move_mean
 
+# this function finds the time step when searching is over
+def find_end_of_search(force):
+    return 0;
+
+# this function plots a vertical dotted line to indicate the end of searching
+def plot_end_of_search(time_step):
+    # pull indicators
+
+    transparency = 0.7
+    text_spacing = bottom * 0.02
+    offset_from_indicator = 0.2
+
+    # time step indicator
+    plt.axvline(time_step, alpha=transparency)
+    plt.text(time_step + offset_from_indicator, bottom + text_spacing, str(time_step), rotation=90)
+
 def calculate_work(time, move_mean, velocity):
     # time step dt, constant
     dt = time[1] - time[0] #ps
