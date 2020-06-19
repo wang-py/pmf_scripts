@@ -33,12 +33,11 @@ def get_average_force(force, N):
     return move_mean
 
 # this function finds the time step when searching is over
-def find_end_of_search(time, mean_force, work):
+def find_end_of_search(mean_force, work):
     #index = np.where(mean_force == np.amax(mean_force))[0][0]
-    index = find_peaks(mean_force, height=200, width=200, distance=200)[0][-1]
-    time_step = time[index]
+    index = find_peaks(mean_force, height=150, width=200, distance=200)[0][-1]
     total_work = work[index]
-    return time_step, total_work;
+    return index, total_work;
 
 # this function plots a vertical dotted line to indicate the end of searching
 def plot_end_of_search(bottom, time_step, work, ax, show_text=True):
@@ -68,7 +67,7 @@ def plotting(time, force, move_mean, work, N, save_figure=False):
     spacing = np.amax(work) * 0.01
     bottom = np.amin(work) + spacing
     # find the end of search
-    end_of_search, search_work = find_end_of_search(time, move_mean, work)
+    end_of_search, search_work = find_end_of_search(move_mean, work)
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
     fig.suptitle("pulling force and work along the trajectory " + fig_title)
@@ -80,7 +79,7 @@ def plotting(time, force, move_mean, work, N, save_figure=False):
                label = "moving average over " + str(N*dt) + " ps")
     ax[0].set(ylabel = "Force [kJ/mol/nm]")
     # plottind end of search
-    plot_end_of_search(bottom, end_of_search, search_work, ax[0], \
+    plot_end_of_search(bottom, time[end_of_search], search_work, ax[0], \
                        show_text=False)
     
     # pull work
@@ -88,7 +87,7 @@ def plotting(time, force, move_mean, work, N, save_figure=False):
     ax[1].set(ylabel = "Work [kJ/mol]")
     ax[1].set(xlabel = "time [ps]")
     # plottind end of search
-    plot_end_of_search(bottom, end_of_search, search_work, ax[1])
+    plot_end_of_search(bottom, time[end_of_search], search_work, ax[1])
     
     ax[0].legend(loc = 'best')
     # option to save figure
