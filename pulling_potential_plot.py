@@ -38,14 +38,13 @@ def find_end_of_search(time, mean_force):
     return time_step;
 
 # this function plots a vertical dotted line to indicate the end of searching
-def plot_end_of_search(bottom, time_step, ax, show_text=True):
+def plot_end_of_search(bottom, time_step, work, ax, show_text=True):
     # pull indicators
-
     transparency = 0.7
     text_spacing = bottom * 0.02
     offset_from_indicator = 0.2
     if show_text:
-        text = "end of search"
+        text = "end of search\nwork = " + str(work) + " kJ/mol"
     else:
         text = ""
 
