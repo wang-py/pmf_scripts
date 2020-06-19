@@ -32,11 +32,13 @@ def get_average_force(force, N):
     return move_mean
 
 # this function finds the time step when searching is over
-def find_end_of_search(force):
-    return 0;
+def find_end_of_search(time, mean_force):
+    index = np.where(mean_force == np.amax(mean_force))
+    time_step = time[index]
+    return time_step;
 
 # this function plots a vertical dotted line to indicate the end of searching
-def plot_end_of_search(time_step):
+def plot_end_of_search(bottom, time_step):
     # pull indicators
 
     transparency = 0.7
@@ -57,6 +59,9 @@ def calculate_work(time, move_mean, velocity):
     return work
 
 def plotting(time, force, move_mean, work, N, save_figure=False):
+    spacing = np.amax(force) * 0.02
+    top = np.amax(force) + spacing
+    bottom = np.amin(force) - spacing
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
     fig.suptitle("pulling force and work along the trajectory " + fig_title)
