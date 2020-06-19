@@ -60,8 +60,9 @@ def calculate_work(time, move_mean, velocity):
 
 def plotting(time, force, move_mean, work, N, save_figure=False):
     spacing = np.amax(force) * 0.02
-    top = np.amax(force) + spacing
     bottom = np.amin(force) - spacing
+    # find the end of search
+    end_of_search = find_end_of_search(time, move_mean)
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
     fig.suptitle("pulling force and work along the trajectory " + fig_title)
