@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from scipy.signal import find_peaks
 import sys
 
 def read_inputs(lines):
@@ -33,7 +34,8 @@ def get_average_force(force, N):
 
 # this function finds the time step when searching is over
 def find_end_of_search(time, mean_force, work):
-    index = np.where(mean_force == np.amax(mean_force))[0][0]
+    #index = np.where(mean_force == np.amax(mean_force))[0][0]
+    index = find_peaks(mean_force, height=150, width=50)[0][-1]
     time_step = time[index]
     total_work = work[index]
     return time_step, total_work;
