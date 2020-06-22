@@ -26,6 +26,6 @@ for run in `ls $RUNS/*pullf.xvg | sort -V`; do
 
   python $PLOT_SCRIPT $run $VELOCITY $SAVE_FIG $filename
   let I=I+1
-  mv $filename.png $RUNS
+  #mv $filename.png $RUNS
 
 done
