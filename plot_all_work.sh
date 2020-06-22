@@ -11,9 +11,6 @@ RUNS=$2
 # pulling velocity
 VELOCITY=$3
 
-# file index
-I=1
-
 # save figures
 SAVE_FIG=1
 
@@ -22,10 +19,9 @@ for run in `ls $RUNS/*pullf.xvg | sort -V`; do
   name=$(basename $run)
 
   # get rid of extensions
-  filename=run_${I}
+  filename=${run%_pullf.xvg}
 
-  python $PLOT_SCRIPT $run $VELOCITY $SAVE_FIG $filename
-  let I=I+1
+  python $PLOT_SCRIPT $run $VELOCITY $SAVE_FIG ${filename}
   #mv $filename.png $RUNS
 
 done
