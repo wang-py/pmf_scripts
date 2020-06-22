@@ -10,13 +10,13 @@ PLOT_SCRIPT=pos_distribution_plot.py
 
 for window in $WINDOWS/*
 do
-  # get rid of parent paths
-  name=$(basename $window)
+    # get rid of parent paths
+    name=$(basename $window)
 
-  # get rid of extensions
-  filename=${name%.xvg}
+    # get rid of extensions
+    filename=${name%.xvg}
 
-  python $PLOT_SCRIPT $window $filename
-  mv $filename.png $WINDOWS
+    python $PLOT_SCRIPT $window $filename
+    mv $filename.png $WINDOWS
 
 done
