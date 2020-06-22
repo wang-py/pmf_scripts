@@ -63,11 +63,9 @@ def calculate_work(time, move_mean, velocity):
     work = np.cumsum(work_one_sum)
     return work
 
-def plotting(time, force, move_mean, work, N, save_figure=False):
+def plotting(time, force, move_mean, work, N, save_figure=False, find_search_work=False):
     spacing = np.amax(work) * 0.01
     bottom = np.amin(work) + spacing
-    # find the end of search
-    end_of_search, search_work = find_end_of_search(move_mean, work)
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
     fig.suptitle("pulling force and work along the trajectory " + fig_title)
@@ -78,16 +76,18 @@ def plotting(time, force, move_mean, work, N, save_figure=False):
     ax[0].plot(time[N-1:-N], move_mean[N-1:-N], 'r', \
                label = "moving average over " + str(N*dt) + " ps")
     ax[0].set(ylabel = "Force [kJ/mol/nm]")
-    # plottind end of search
-    plot_end_of_search(bottom, time[end_of_search], search_work, ax[0], \
+    # find the end of search
+    if find_search_work:
+        end_of_search, search_work = find_end_of_search(move_mean, work)
+    # plotting end of search
+        plot_end_of_search(bottom, time[end_of_search], search_work, ax[0], \
                        show_text=False)
-    
+        plot_end_of_search(bottom, time[end_of_search], search_work, ax[1])
+
     # pull work
     ax[1].scatter(time[N-1:-N], work[N-1:-N], s = 2)
     ax[1].set(ylabel = "Work [kJ/mol]")
     ax[1].set(xlabel = "time [ps]")
-    # plottind end of search
-    plot_end_of_search(bottom, time[end_of_search], search_work, ax[1])
     
     ax[0].legend(loc = 'best')
     # option to save figure
