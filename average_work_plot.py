@@ -56,7 +56,7 @@ def get_jarzynski_work(work_runs):
 # save_figure: option to save figure as a PNG
 
 def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
-                      mean_search_work, save_figure=False, plot_search_work=True):
+                      mean_search_work, plot_search_work, save_figure=False):
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
     fig.suptitle("average work and Jarzynski average work along the trajectory " + fig_title) 
@@ -126,4 +126,4 @@ if __name__ == "__main__":
     jarzynski_work = get_jarzynski_work(work_runs)
     average_search_work = get_average_search_work(work_runs, force_runs)
     plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
-                      average_search_work, save_figure=False, plot_search_work)
+                      average_search_work, plot_search_work)
