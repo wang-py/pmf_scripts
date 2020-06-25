@@ -88,11 +88,18 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
         plt.show()
 
 if __name__ == "__main__":
+    # folder that contains all xvgs
     xvg_folder = sys.argv[1]
+
+    # pulling rate
+    velocity = float(sys.argv[2])
     
+    # option to plot search work
+    plot_search_work = bool(int(sys.argv[3]))
+
     # customize title
-    if len(sys.argv) > 3:
-        fig_title = sys.argv[3]
+    if len(sys.argv) > 4:
+        fig_title = sys.argv[4]
     else:
         fig_title = ""
     
@@ -104,8 +111,6 @@ if __name__ == "__main__":
     # data structure that contains all forces
     force_runs = []
     
-    # pulling rate
-    velocity = float(sys.argv[2])
     
     for file in os.scandir(directory):
         filename = os.fsdecode(file)
@@ -121,4 +126,4 @@ if __name__ == "__main__":
     jarzynski_work = get_jarzynski_work(work_runs)
     average_search_work = get_average_search_work(work_runs, force_runs)
     plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
-                      average_search_work, save_figure=False)
+                      average_search_work, save_figure=False, plot_search_work)
