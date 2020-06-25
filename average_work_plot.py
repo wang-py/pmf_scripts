@@ -8,16 +8,6 @@ import sys
 import os
 from pulling_potential_plot import *
 
-xvg_folder = sys.argv[1]
-
-# customize title
-if len(sys.argv) > 3:
-    fig_title = sys.argv[3]
-else:
-    fig_title = ""
-
-directory = os.fsencode(xvg_folder)
-
 def get_one_work(one_xvg, velocity):
     one_run = open(one_xvg, 'r')
     lines = one_run.readlines()
@@ -66,7 +56,7 @@ def get_jarzynski_work(work_runs):
 # save_figure: option to save figure as a PNG
 
 def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
-                      mean_search_work, save_figure=False):
+                      mean_search_work, save_figure=False, plot_search_work=True):
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
     fig.suptitle("average work and Jarzynski average work along the trajectory " + fig_title) 
@@ -75,9 +65,13 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
     ax[0].plot(time[N-1:-N], mean_work[N-1:-N], \
                label = "average work over " + str(runs) + " runs")
     ax[0].set(ylabel = "Work [kJ/mol]")
-    ax[0].hlines(mean_search_work, xmin=0, xmax=time[-1], \
-                 label = "average search work = " + \
-                 f"{mean_search_work:.2f}" + " kJ/mol", color='k', linestyle='--')
+
+    # option to not plot search work
+    if plot_search_work:
+        ax[0].hlines(mean_search_work, xmin=0, xmax=time[-1], \
+                     label = "average search work = " + \
+                     f"{mean_search_work:.2f}" + " kJ/mol", \
+                     color='k', linestyle='--')
     ax[0].legend(loc = 'best')
     
     # Jayzynsky mean work
@@ -93,27 +87,38 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
     else:
         plt.show()
 
-# data structure that contains all runs
-work_runs = []
+if __name__ == "__main__":
+    xvg_folder = sys.argv[1]
+    
+    # customize title
+    if len(sys.argv) > 3:
+        fig_title = sys.argv[3]
+    else:
+        fig_title = ""
+    
+    directory = os.fsencode(xvg_folder)
 
-# data structure that contains all forces
-force_runs = []
-
-# pulling rate
-velocity = float(sys.argv[2])
-
-for file in os.scandir(directory):
-    filename = os.fsdecode(file)
-     # only reads xvgs
-    if filename.endswith(".xvg"): 
-        one_time, N, one_work, force = get_one_work(filename, velocity)
-        work_runs.append(one_work)
-        force_runs.append(force)
-
-num_of_runs = len(work_runs)
-# standard mean work
-mean_work = np.mean(work_runs, axis=0)
-jarzynski_work = get_jarzynski_work(work_runs)
-average_search_work = get_average_search_work(work_runs, force_runs)
-plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
-                  average_search_work, save_figure=False)
+    # data structure that contains all runs
+    work_runs = []
+    
+    # data structure that contains all forces
+    force_runs = []
+    
+    # pulling rate
+    velocity = float(sys.argv[2])
+    
+    for file in os.scandir(directory):
+        filename = os.fsdecode(file)
+         # only reads xvgs
+        if filename.endswith(".xvg"): 
+            one_time, N, one_work, force = get_one_work(filename, velocity)
+            work_runs.append(one_work)
+            force_runs.append(force)
+    
+    num_of_runs = len(work_runs)
+    # standard mean work
+    mean_work = np.mean(work_runs, axis=0)
+    jarzynski_work = get_jarzynski_work(work_runs)
+    average_search_work = get_average_search_work(work_runs, force_runs)
+    plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
+                      average_search_work, save_figure=False)
