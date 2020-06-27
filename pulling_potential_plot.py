@@ -41,10 +41,9 @@ def find_end_of_search(mean_force, work):
     return index, total_work;
 
 # this function plots a vertical dotted line to indicate the end of searching
-def plot_end_of_search(bottom, time_step, work, ax, show_text=True):
-    # pull indicators
+def plot_end_of_search(top, bottom, time_step, work, ax, show_text=True):
     transparency = 0.7
-    text_spacing = bottom * 0.02
+    text_spacing = top * 0.02
     offset_from_indicator = 1
     if show_text:
         text = "first passage\nwork = " + f"{work:.2f}" + " kJ/mol"
@@ -65,7 +64,8 @@ def calculate_work(time, move_mean, velocity):
     return work
 
 def plotting(time, force, move_mean, work, N, save_figure=False, find_search_work=False):
-    spacing = np.amax(work) * 0.01
+    top = np.amax(work)
+    spacing = top * 0.01
     bottom = np.amin(work) + spacing
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
@@ -81,9 +81,9 @@ def plotting(time, force, move_mean, work, N, save_figure=False, find_search_wor
     if find_search_work:
         end_of_search, search_work = find_end_of_search(move_mean, work)
     # plotting end of search
-        plot_end_of_search(bottom, time[end_of_search], search_work, ax[0], \
+        plot_end_of_search(top, bottom, time[end_of_search], search_work, ax[0], \
                        show_text=False)
-        plot_end_of_search(bottom, time[end_of_search], search_work, ax[1])
+        plot_end_of_search(top, bottom, time[end_of_search], search_work, ax[1])
 
     # pull work
     ax[1].scatter(time[N-1:-N], work[N-1:-N], s = 2)
