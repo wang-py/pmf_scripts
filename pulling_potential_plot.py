@@ -93,7 +93,7 @@ def plotting(time, force, move_mean, work, N, save_figure=False, find_search_wor
     ax[0].legend(loc = 'best')
     # option to save figure
     if save_figure:
-        plt.savefig(fig_title+".png", dpi=200)
+        plt.savefig(fig_title+".pdf")
     else:
         plt.show()
 
