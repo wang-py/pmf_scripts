@@ -53,13 +53,13 @@ def get_jarzynski_work(work_runs):
 # runs: number of runs
 # mean_work: average work calculated using standard averaging
 # jarzynski_work: average work calculated using Jarzynski equation
-# save_figure: option to save figure as a PNG
+# save_figure: option to save figure as a PDF
 
 def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
                       mean_search_work, plot_search_work, save_figure=False):
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
-    fig.suptitle("average work along the trajectory " + fig_title) 
+    fig.suptitle("average work, " + fig_title) 
     
     # mean work
     ax[0].plot(time[N-1:-N], mean_work[N-1:-N], \
@@ -69,7 +69,7 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
     # option to not plot search work
     if plot_search_work:
         ax[0].hlines(mean_search_work, xmin=0, xmax=time[-1], \
-                     label = "average search work = " + \
+                     label = "average first passage work = " + \
                      f"{mean_search_work:.2f}" + " kJ/mol", \
                      color='k', linestyle='--')
     ax[0].legend(loc = 'best')
@@ -83,7 +83,7 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
 
     # option to save figure
     if save_figure:
-        plt.savefig(fig_title+".png", dpi=200)
+        plt.savefig(fig_title+".pdf")
     else:
         plt.show()
 
