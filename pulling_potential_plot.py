@@ -35,7 +35,8 @@ def get_average_force(force, N):
 # this function finds the time step when searching is over
 def find_end_of_search(mean_force, work):
     #index = np.where(mean_force == np.amax(mean_force))[0][0]
-    index = find_peaks(mean_force, height=100, width=200, distance=200)[0][-1]
+    peak = np.amax(mean_force)
+    index = find_peaks(mean_force, height=peak, width=200)[0][-1] + 1000
     total_work = work[index]
     return index, total_work;
 
@@ -46,7 +47,7 @@ def plot_end_of_search(bottom, time_step, work, ax, show_text=True):
     text_spacing = bottom * 0.02
     offset_from_indicator = 1
     if show_text:
-        text = "end of search\nwork = " + f"{work:.2f}" + " kJ/mol"
+        text = "first passage\nwork = " + f"{work:.2f}" + " kJ/mol"
     else:
         text = ""
 
@@ -122,4 +123,4 @@ if __name__ == "__main__":
     N = int(time_window / velocity / dt)
     move_mean = get_average_force(force, N)
     work = calculate_work(time, move_mean, velocity)
-    plotting(time, force, move_mean, work, N, save_figure, find_search_work=False)
+    plotting(time, force, move_mean, work, N, save_figure, find_search_work=True)
