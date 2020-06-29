@@ -84,7 +84,7 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
     if plot_search_work:
         ax[0].hlines(mean_search_work, xmin=0, xmax=time[-1], \
                      label = "average first passage work = " + \
-                     f"{mean_search_work:.2f}" + " kJ/mol", \
+                     f"{mean_search_work:.0f}" + " kJ/mol", \
                      color='k', linestyle='--')
     ax[0].legend(loc = 'best')
     
@@ -143,4 +143,4 @@ if __name__ == "__main__":
     jarzynski_work = get_jarzynski_work(work_runs)
     average_search_work = get_average_search_work_from_file(search_work_file)
     plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
-                      average_search_work, plot_search_work)
+                      average_search_work, plot_search_work, save_figure=True)
