@@ -33,6 +33,20 @@ def get_average_search_work(work_runs, force_runs):
     average_search_work = np.mean(search_work_arr)
     return average_search_work
 
+def get_average_search_work_from_file(search_work_file):
+    search_work = open(search_work_file, 'r')
+    lines = search_work.readlines()
+    
+    search_arr = []
+    for line in lines:
+        if line[0] != '.':
+            search_arr.append(float(line))
+
+    average_search_work = np.mean(search_arr)
+
+    return average_search_work
+
+
 def get_jarzynski_work(work_runs):
     R = 8.314 #J/K/mol
     T = 310 #K
@@ -97,9 +111,12 @@ if __name__ == "__main__":
     # option to plot search work
     plot_search_work = bool(int(sys.argv[3]))
 
+    # file that contains all search work
+    search_work_file = sys.argv[4]
+
     # customize title
-    if len(sys.argv) > 4:
-        fig_title = sys.argv[4]
+    if len(sys.argv) > 5:
+        fig_title = sys.argv[5]
     else:
         fig_title = ""
     
@@ -124,6 +141,6 @@ if __name__ == "__main__":
     # standard mean work
     mean_work = np.mean(work_runs, axis=0)
     jarzynski_work = get_jarzynski_work(work_runs)
-    average_search_work = get_average_search_work(work_runs, force_runs)
+    average_search_work = get_average_search_work_from_file(search_work_file)
     plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
                       average_search_work, plot_search_work)
