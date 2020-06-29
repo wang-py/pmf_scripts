@@ -46,7 +46,7 @@ def plot_end_of_search(top, bottom, time_step, work, ax, show_text=True):
     text_spacing = top * 0.02
     offset_from_indicator = 1
     if show_text:
-        text = "first passage\nwork = " + f"{work:.2f}" + " kJ/mol"
+        text = "first passage\nwork = " + f"{work:.0f}" + " kJ/mol"
     else:
         text = ""
 
@@ -69,7 +69,7 @@ def plotting(time, force, move_mean, work, N, save_figure=False, find_search_wor
     bottom = np.amin(work) + spacing
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
-    fig.suptitle("pulling force and work along the trajectory " + fig_title)
+    fig.suptitle(fig_title)
     
     # pull force
     ax[0].scatter(time, force, s = 2)
@@ -93,7 +93,7 @@ def plotting(time, force, move_mean, work, N, save_figure=False, find_search_wor
     ax[0].legend(loc = 'best')
     # option to save figure
     if save_figure:
-        plt.savefig(fig_title+".pdf")
+        plt.savefig(fig_title+".png")
     else:
         plt.show()
 
