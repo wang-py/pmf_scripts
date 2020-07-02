@@ -33,27 +33,34 @@ def get_average_force(force, N):
     return move_mean
 
 # this function finds the time step when searching is over
-def find_end_of_search(mean_force, work):
-    #index = np.where(mean_force == np.amax(mean_force))[0][0]
+def find_end_of_search(force, work):
+    window = 0.01
+    N = int(window / velocity / dt)
+    mean_force = get_average_force(force, N)
     #manually set the data range
-    beginning_time = input("Enter the cutoff point:\n")
+    #"Enter the cutoff point:\n"
+    beginning_time, end_time = [int(a) for a in input().split()]
     if beginning_time:
         beginning_index = int(beginning_time) * 20
+        end_index = int(end_time) * 20
     else:
         beginning_index = 0
+        end_index = -1
 
-    peak = np.amax(mean_force[beginning_index:])
+    peak = np.amax(mean_force[beginning_index:end_index])
     # shift peak index to start from beginning_index
-    correction = 1000 + beginning_index
+    correction = beginning_index + 100
     index = find_peaks(mean_force[beginning_index:], \
-                       height=peak, width=200)[0][-1] + correction
+                       height=peak)[0][0] + correction
     total_work = work[index]
+    # print to screen
+    print(total_work)
     return index, total_work;
 
 # this function plots a vertical dotted line to indicate the end of searching
 def plot_end_of_search(top, bottom, time_step, work, ax, show_text=True):
     transparency = 0.7
-    text_spacing = top * 0.02
+    text_spacing = bottom * 0.9 + top * 0.1
     offset_from_indicator = 1
     if show_text:
         text = "first passage\nwork = " + f"{work:.0f}" + " kJ/mol"
@@ -89,7 +96,7 @@ def plotting(time, force, move_mean, work, N, save_figure=False, find_search_wor
     ax[0].set(ylabel = "Force [kJ/mol/nm]")
     # find the end of search
     if find_search_work:
-        end_of_search, search_work = find_end_of_search(move_mean, work)
+        end_of_search, search_work = find_end_of_search(force, work)
     # plotting end of search
         plot_end_of_search(top, bottom, time[end_of_search], search_work, ax[0], \
                        show_text=False)
@@ -110,7 +117,7 @@ def plotting(time, force, move_mean, work, N, save_figure=False, find_search_wor
 if __name__ == "__main__":
     # read file from command line
     xvg_file = open(sys.argv[1], 'r')
-    print("working with " + sys.argv[1])
+    print(sys.argv[1])
     lines = xvg_file.readlines()
 
     # option to save as png
