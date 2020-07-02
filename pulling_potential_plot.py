@@ -38,12 +38,14 @@ def find_end_of_search(mean_force, work):
     peak = np.amax(mean_force)
     index = find_peaks(mean_force, height=peak, width=200)[0][-1] + 1000
     total_work = work[index]
+    # print to screen
+    print(total_work)
     return index, total_work;
 
 # this function plots a vertical dotted line to indicate the end of searching
 def plot_end_of_search(top, bottom, time_step, work, ax, show_text=True):
     transparency = 0.7
-    text_spacing = top * 0.02
+    text_spacing = bottom * 0.9 + top * 0.1
     offset_from_indicator = 1
     if show_text:
         text = "first passage\nwork = " + f"{work:.0f}" + " kJ/mol"
@@ -100,6 +102,7 @@ def plotting(time, force, move_mean, work, N, save_figure=False, find_search_wor
 if __name__ == "__main__":
     # read file from command line
     xvg_file = open(sys.argv[1], 'r')
+    print(sys.argv[1])
     lines = xvg_file.readlines()
 
     # option to save as png
