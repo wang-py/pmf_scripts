@@ -39,8 +39,9 @@ def find_end_of_search(force, work):
     mean_force = get_average_force(force, N)
     #manually set the data range
     #"Enter the cutoff point:\n"
-    beginning_time, end_time = [int(a) for a in input().split()]
-    if beginning_time:
+    bounds = input()
+    if bounds:
+        beginning_time, end_time = [int(a) for a in bounds.split()]
         beginning_index = int(beginning_time) * 20
         end_index = int(end_time) * 20
     else:
@@ -60,7 +61,7 @@ def find_end_of_search(force, work):
 # this function plots a vertical dotted line to indicate the end of searching
 def plot_end_of_search(top, bottom, time_step, work, ax, show_text=True):
     transparency = 0.7
-    text_spacing = bottom * 0.9 + top * 0.1
+    text_spacing = top * 0.1
     offset_from_indicator = 1
     if show_text:
         text = "first passage\nwork = " + f"{work:.0f}" + " kJ/mol"
