@@ -97,7 +97,8 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
 
     # option to save figure
     if save_figure:
-        plt.savefig(fig_title+".pdf")
+        plt.savefig(fig_title+".jpg", dpi=200)
+        plt.savefig(fig_title+".png")
     else:
         plt.show()
 
