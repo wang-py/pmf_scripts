@@ -90,11 +90,12 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work):
 
     return ax
 
-def plot_search_work(ax, mean_search_work, time):
+def plot_search_work(ax, mean_search_work, work_label, time):
+    annotation = work_label + " passage work = " + \
+                 f"{mean_search_work:.0f}" + " kJ/mol"
     ax[0].hlines(mean_search_work, xmin=0, xmax=time[-1], \
-                 label = "average first passage work = " + \
-                 f"{mean_search_work:.0f}" + " kJ/mol", \
                  color='k', linestyle='--')
+    ax[0].text(time[-1], mean_search_work, annotation)
 
 if __name__ == "__main__":
     # folder that contains all xvgs
@@ -150,8 +151,8 @@ if __name__ == "__main__":
     
     # option to not plot search work
     if enable_search_work:
-        plot_search_work(ax, search_work[0], one_time)
-        plot_search_work(ax, search_work[1], one_time)
+        plot_search_work(ax, search_work[0], "headgroup", one_time)
+        plot_search_work(ax, search_work[1], "tail", one_time)
 
     save_figure = False
     # option to save figure
