@@ -79,8 +79,6 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work):
                label = "average work over " + str(runs) + " runs")
     ax[0].set(ylabel = "Work [kJ/mol]")
 
-    ax[0].legend(loc = 'best')
-    
     # Jayzynsky mean work
     ax[1].plot(time[N-1:-N], jarzynski_work[N-1:-N], \
                label = "Jarzynski average work over " + str(runs) + " runs")
@@ -91,11 +89,11 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work):
     return ax
 
 def plot_search_work(ax, mean_search_work, work_label, time):
-    annotation = work_label + " passage work = " + \
+    annotation = work_label + " = " + \
                  f"{mean_search_work:.0f}" + " kJ/mol"
     ax[0].hlines(mean_search_work, xmin=0, xmax=time[-1], \
-                 color='k', linestyle='--')
-    ax[0].text(time[-1], mean_search_work, annotation)
+                 label="passage work", color='k', linestyle='--')
+    ax[0].text(time[-1], mean_search_work, annotation, ha="right")
 
 if __name__ == "__main__":
     # folder that contains all xvgs
@@ -152,6 +150,7 @@ if __name__ == "__main__":
     # option to not plot search work
     if enable_search_work:
         plot_search_work(ax, search_work[0], "headgroup", one_time)
+        ax[0].legend(loc = 'best')
         plot_search_work(ax, search_work[1], "tail", one_time)
 
     save_figure = False
