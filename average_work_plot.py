@@ -70,7 +70,7 @@ def get_jarzynski_work(work_runs):
 # save_figure: option to save figure as a PDF
 
 def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
-                      mean_search_work, plot_search_work, save_figure=False):
+                      mean_search_work, enable_search_work, save_figure=False):
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
     fig.suptitle("average work, " + fig_title) 
@@ -81,11 +81,9 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
     ax[0].set(ylabel = "Work [kJ/mol]")
 
     # option to not plot search work
-    if plot_search_work:
-        ax[0].hlines(mean_search_work, xmin=0, xmax=time[-1], \
-                     label = "average first passage work = " + \
-                     f"{mean_search_work:.0f}" + " kJ/mol", \
-                     color='k', linestyle='--')
+    if enable_search_work:
+        plot_search_work(ax, mean_search_work, time)
+
     ax[0].legend(loc = 'best')
     
     # Jayzynsky mean work
@@ -102,6 +100,12 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
     else:
         plt.show()
 
+def plot_search_work(ax, mean_search_work, time):
+    ax[0].hlines(mean_search_work, xmin=0, xmax=time[-1], \
+                 label = "average first passage work = " + \
+                 f"{mean_search_work:.0f}" + " kJ/mol", \
+                 color='k', linestyle='--')
+
 if __name__ == "__main__":
     # folder that contains all xvgs
     xvg_folder = sys.argv[1]
@@ -110,7 +114,7 @@ if __name__ == "__main__":
     velocity = float(sys.argv[2])
     
     # option to plot search work
-    plot_search_work = bool(int(sys.argv[3]))
+    enable_search_work = bool(int(sys.argv[3]))
 
     # file that contains all search work
     search_work_file = sys.argv[4]
@@ -119,7 +123,7 @@ if __name__ == "__main__":
     tail_work_file = sys.argv[5]
 
     # customize title
-    if len(sys.argv) > 5:
+    if len(sys.argv) > 6:
         fig_title = sys.argv[6]
     else:
         fig_title = ""
@@ -149,4 +153,4 @@ if __name__ == "__main__":
     # work for tail
     average_search_work_tail = get_average_search_work_from_file(tail_work_file)
     plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
-                      average_search_work, plot_search_work, save_figure=True)
+                      average_search_work, enable_search_work, save_figure=False)
