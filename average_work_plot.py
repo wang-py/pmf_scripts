@@ -69,8 +69,7 @@ def get_jarzynski_work(work_runs):
 # jarzynski_work: average work calculated using Jarzynski equation
 # save_figure: option to save figure as a PDF
 
-def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
-                      mean_search_work, enable_search_work, save_figure=False):
+def plot_average_work(time, N, runs, mean_work, jarzynski_work):
     # pull force and pulling work
     fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
     fig.suptitle("average work, " + fig_title) 
@@ -80,11 +79,6 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
                label = "average work over " + str(runs) + " runs")
     ax[0].set(ylabel = "Work [kJ/mol]")
 
-    # option to not plot search work
-    if enable_search_work:
-        plot_search_work(ax, mean_search_work[0], time)
-        plot_search_work(ax, mean_search_work[1], time)
-
     ax[0].legend(loc = 'best')
     
     # Jayzynsky mean work
@@ -93,13 +87,6 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
     ax[1].set(ylabel = "Work [kJ/mol]")
     ax[1].set(xlabel = "time [ps]")
     ax[1].legend(loc = 'best')
-
-    # option to save figure
-    if save_figure:
-        plt.savefig(fig_title+".jpg", dpi=200)
-        plt.savefig(fig_title+".pdf")
-    else:
-        plt.show()
 
     return ax
 
@@ -139,7 +126,6 @@ if __name__ == "__main__":
     # data structure that contains all forces
     force_runs = []
     
-    
     for file in os.scandir(directory):
         filename = os.fsdecode(file)
          # only reads xvgs
@@ -159,5 +145,19 @@ if __name__ == "__main__":
     search_work = []
     search_work.append(average_search_work)
     search_work.append(average_search_work_tail)
-    ax = plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
-                           search_work, enable_search_work, save_figure=False)
+    ax = plot_average_work(one_time, N, num_of_runs, mean_work, \
+                           jarzynski_work)
+    
+    # option to not plot search work
+    if enable_search_work:
+        plot_search_work(ax, search_work[0], one_time)
+        plot_search_work(ax, search_work[1], one_time)
+
+    save_figure = False
+    # option to save figure
+    if save_figure:
+        plt.savefig(fig_title+".jpg", dpi=200)
+        plt.savefig(fig_title+".pdf")
+    else:
+        plt.show()
+
