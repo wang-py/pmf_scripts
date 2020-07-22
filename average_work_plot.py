@@ -89,11 +89,13 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work):
     return ax
 
 def plot_search_work(ax, mean_search_work, work_label, time):
+    spacing = 12
     annotation = work_label + " = " + \
                  f"{mean_search_work:.0f}" + " kJ/mol"
     ax[0].hlines(mean_search_work, xmin=0, xmax=time[-1], \
                  label="passage work", color='k', linestyle='--')
-    ax[0].text(time[-1], mean_search_work, annotation, ha="right")
+    ax[0].text(time[-1], mean_search_work - spacing, annotation, ha="right", \
+               size=14)
 
 if __name__ == "__main__":
     # folder that contains all xvgs
