@@ -82,7 +82,8 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
 
     # option to not plot search work
     if enable_search_work:
-        plot_search_work(ax, mean_search_work, time)
+        plot_search_work(ax, mean_search_work[0], time)
+        plot_search_work(ax, mean_search_work[1], time)
 
     ax[0].legend(loc = 'best')
     
@@ -99,6 +100,8 @@ def plot_average_work(time, N, runs, mean_work, jarzynski_work, \
         plt.savefig(fig_title+".pdf")
     else:
         plt.show()
+
+    return ax
 
 def plot_search_work(ax, mean_search_work, time):
     ax[0].hlines(mean_search_work, xmin=0, xmax=time[-1], \
@@ -152,5 +155,9 @@ if __name__ == "__main__":
     average_search_work = get_average_search_work_from_file(search_work_file)
     # work for tail
     average_search_work_tail = get_average_search_work_from_file(tail_work_file)
-    plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
-                      average_search_work, enable_search_work, save_figure=False)
+    # array of two search work
+    search_work = []
+    search_work.append(average_search_work)
+    search_work.append(average_search_work_tail)
+    ax = plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
+                           search_work, enable_search_work, save_figure=False)
