@@ -115,9 +115,12 @@ if __name__ == "__main__":
     # file that contains all search work
     search_work_file = sys.argv[4]
 
+    # file that contains tail search work
+    tail_work_file = sys.argv[5]
+
     # customize title
     if len(sys.argv) > 5:
-        fig_title = sys.argv[5]
+        fig_title = sys.argv[6]
     else:
         fig_title = ""
     
@@ -143,5 +146,7 @@ if __name__ == "__main__":
     mean_work = np.mean(work_runs, axis=0)
     jarzynski_work = get_jarzynski_work(work_runs)
     average_search_work = get_average_search_work_from_file(search_work_file)
+    # work for tail
+    average_search_work_tail = get_average_search_work_from_file(tail_work_file)
     plot_average_work(one_time, N, num_of_runs, mean_work, jarzynski_work, \
                       average_search_work, plot_search_work, save_figure=True)
