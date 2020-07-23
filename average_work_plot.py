@@ -71,21 +71,26 @@ def get_jarzynski_work(work_runs):
 
 def plot_average_work(time, N, runs, mean_work, jarzynski_work):
     # pull force and pulling work
-    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,10))
+    fig, ax = plt.subplots(2, 1, sharex=True, figsize=(9.5,9))
+    # bring plots closer
     plt.subplots_adjust(hspace=0.05)
-    fig.suptitle("average work, " + fig_title) 
+    fig.suptitle(fig_title, y=0.92, fontsize=20) 
     
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+
     # mean work
     ax[0].plot(time[N-1:-N], mean_work[N-1:-N], \
                label = "average work over " + str(runs) + " runs")
-    ax[0].set(ylabel = "Work [kJ/mol]")
+    ax[0].set_ylabel("Work [kJ/mol]", fontsize=20)
+    plt.setp(ax[0].get_yticklabels(), fontsize=20)
 
     # Jayzynsky mean work
     ax[1].plot(time[N-1:-N], jarzynski_work[N-1:-N], \
                label = "Jarzynski average work over " + str(runs) + " runs")
-    ax[1].set(ylabel = "Work [kJ/mol]")
-    ax[1].set(xlabel = "time [ps]")
-    ax[1].legend(loc = 'best')
+    ax[1].set_ylabel("Work [kJ/mol]", fontsize=20)
+    ax[1].set_xlabel("time [ps]", fontsize=20)
+    ax[1].legend(loc = 'lower right', fontsize=16)
 
     return ax
 
@@ -153,10 +158,10 @@ if __name__ == "__main__":
     # option to not plot search work
     if enable_search_work:
         plot_search_work(ax, search_work[0], "headgroup", one_time)
-        ax[0].legend(loc = 'best')
+        ax[0].legend(loc = 'lower right', fontsize=16)
         plot_search_work(ax, search_work[1], "tail", one_time)
 
-    save_figure = False
+    save_figure = True
     # option to save figure
     if save_figure:
         plt.savefig(fig_title+".jpg", dpi=200)
