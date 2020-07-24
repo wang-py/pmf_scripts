@@ -120,6 +120,7 @@ if __name__ == "__main__":
         # file that contains tail search work
         tail_work_file = sys.argv[5]
 
+        # total search work
         average_search_work = get_average_search_work_from_file(search_work_file)
         # work for tail
         average_search_work_tail = get_average_search_work_from_file(tail_work_file)
@@ -128,11 +129,16 @@ if __name__ == "__main__":
         search_work.append(average_search_work)
         search_work.append(average_search_work_tail)
 
-    # customize title
-    if len(sys.argv) > 6:
-        fig_title = sys.argv[6]
+        # customize title
+        if len(sys.argv) > 6:
+            fig_title = sys.argv[6]
+        else:
+            fig_title = ""
     else:
-        fig_title = ""
+        if len(sys.argv) > 4:
+            fig_title = sys.argv[4]
+        else:
+            fig_title = ""
     
     directory = os.fsencode(xvg_folder)
 
