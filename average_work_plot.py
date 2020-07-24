@@ -112,12 +112,21 @@ if __name__ == "__main__":
     
     # option to plot search work
     enable_search_work = bool(int(sys.argv[3]))
+    
+    if enable_search_work:
+        # file that contains all search work
+        search_work_file = sys.argv[4]
 
-    # file that contains all search work
-    search_work_file = sys.argv[4]
+        # file that contains tail search work
+        tail_work_file = sys.argv[5]
 
-    # file that contains tail search work
-    tail_work_file = sys.argv[5]
+        average_search_work = get_average_search_work_from_file(search_work_file)
+        # work for tail
+        average_search_work_tail = get_average_search_work_from_file(tail_work_file)
+        # array of two search work
+        search_work = []
+        search_work.append(average_search_work)
+        search_work.append(average_search_work_tail)
 
     # customize title
     if len(sys.argv) > 6:
@@ -145,13 +154,6 @@ if __name__ == "__main__":
     # standard mean work
     mean_work = np.mean(work_runs, axis=0)
     jarzynski_work = get_jarzynski_work(work_runs)
-    average_search_work = get_average_search_work_from_file(search_work_file)
-    # work for tail
-    average_search_work_tail = get_average_search_work_from_file(tail_work_file)
-    # array of two search work
-    search_work = []
-    search_work.append(average_search_work)
-    search_work.append(average_search_work_tail)
     ax = plot_average_work(one_time, N, num_of_runs, mean_work, \
                            jarzynski_work)
     
@@ -161,7 +163,7 @@ if __name__ == "__main__":
         ax[0].legend(loc = 'lower right', fontsize=16)
         plot_search_work(ax, search_work[1], "tail", one_time)
 
-    save_figure = True
+    save_figure = False
     # option to save figure
     if save_figure:
         plt.savefig(fig_title+".jpg", dpi=200)
