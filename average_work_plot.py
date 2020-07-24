@@ -7,6 +7,15 @@ import pandas as pd
 import sys
 import os
 from pulling_potential_plot import *
+import enum
+
+class options(enum.Enum):
+    directory = 1
+    velocity = 2
+    search = 3
+    search_total = 4
+    search_tail = 5
+    title = 6
 
 def get_one_work(one_xvg, velocity):
     one_run = open(one_xvg, 'r')
