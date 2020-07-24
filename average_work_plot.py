@@ -169,7 +169,7 @@ if __name__ == "__main__":
         ax[0].legend(loc = 'lower right', fontsize=16)
         plot_search_work(ax, search_work[1], "tail", one_time)
 
-    save_figure = False
+    save_figure = True
     # option to save figure
     if save_figure:
         plt.savefig(fig_title+".jpg", dpi=200)
