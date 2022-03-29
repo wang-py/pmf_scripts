@@ -41,7 +41,7 @@ for line in lines:
 
 # numpy array of frames
 frames_str = np.array([x_arr, y_arr, z_arr])
-frames = frames_str.astype(np.float)
+frames = frames_str.astype(float)
 # convert to Angstroms
 frames = frames * 10
 frames = np.transpose(frames)
@@ -67,6 +67,6 @@ common_xlabel = "dr^2 = " + f"{dr_2:.2f}" + " [Å^2]"
 fig.text(0.5, 0.04, common_xlabel, ha='center')
 
 # option to save figure
-plt.savefig(fig_title+".png", dpi=200)
+#plt.savefig(fig_title+".png", dpi=200)
 
-#plt.show()
+plt.show()
