@@ -21,7 +21,7 @@ lines = xvg_file.readlines()
 if len(sys.argv) > 2:
     fig_title = sys.argv[2]
 else:
-    fig_title = ""
+    fig_title = sys.argv[1].split('.')[0]
 
 # data arrays for analysis
 x_arr = []
@@ -39,15 +39,21 @@ for line in lines:
         y_arr.append(line_entry[2])
         z_arr.append(line_entry[3])
 
+# skipping points
+skip_pts = 1
 # numpy array of frames
-frames_str = np.array([x_arr, y_arr, z_arr])
+frames_str = np.array([x_arr[::skip_pts], y_arr[::skip_pts], z_arr[::skip_pts]])
 frames = frames_str.astype(float)
 # convert to Angstroms
 frames = frames * 10
 frames = np.transpose(frames)
-# find deviations
-first_frame = frames[0, 0:]
-deviations = frames - first_frame
+# find deviations to the average
+#first_frame = frames[0, 0:]
+x_avg = np.mean(frames[:,0])
+y_avg = np.mean(frames[:,1])
+z_avg = np.mean(frames[:,2])
+average = np.array([x_avg, y_avg, z_avg])
+deviations = frames - average
 
 # plotting
 fig, ax = plt.subplots(1, 3, sharey = False, sharex = True, figsize=(14,10))
@@ -62,9 +68,9 @@ mean_dy = plot_one_dist(ax[1], bins, "y", deviations[:, 1], 0, save = False)
 mean_dz = plot_one_dist(ax[2], bins, "z", deviations[:, 2], 0, save = False)
 
 # added dr^2
-dr_2 = mean_dx ** 2 + mean_dy ** 2 + mean_dz ** 2
-common_xlabel = "dr^2 = " + f"{dr_2:.2f}" + " [Å^2]"
-fig.text(0.5, 0.04, common_xlabel, ha='center')
+#dr_2 = mean_dx ** 2 + mean_dy ** 2 + mean_dz ** 2
+#common_xlabel = "dr^2 = " + f"{dr_2:.2f}" + " [Å^2]"
+#fig.text(0.5, 0.04, common_xlabel, ha='center')
 
 # option to save figure
 #plt.savefig(fig_title+".png", dpi=200)
