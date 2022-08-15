@@ -27,7 +27,7 @@ def get_average_energy(input_xvg, k):
     data = data.astype(float) * 10 #convert to angstroms
     
     mean_dx, mean_dy, mean_dz = get_avg_deviation(data)
-    mean_energy = (mean_dx ** 2 + mean_dy ** 2 + mean_dz ** 2) * k
+    mean_energy = (mean_dx ** 2 + mean_dy ** 2 + mean_dz ** 2) * k / 2
 
     return mean_energy
 
@@ -38,6 +38,7 @@ def plot_average_energy_vs_site(input_xvgs, k):
 
     site_number = np.arange(1, len(mean_energy)+1)
     plt.scatter(site_number, mean_energy)
+    plt.title("average energy vs. dowser prediction sites")
     plt.xlabel("site number")
     plt.ylabel("average energy [kJ/mol]")
     plt.show()
