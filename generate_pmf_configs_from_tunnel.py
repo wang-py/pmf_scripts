@@ -97,6 +97,8 @@ def generate_configs(tunnel_points, structure_pdb, prefix_filename):
     ----------------------------------------------------------------------------
     """
     with open(structure_pdb, 'r') as spdb:
+        box_data = [line for line in spdb.readlines() if 'CRYST' in line][0]
+        spdb.seek(0,0)
         structure_data = [line for line in spdb.readlines() if 'ATOM' in line]
     
     i = 0
@@ -104,6 +106,7 @@ def generate_configs(tunnel_points, structure_pdb, prefix_filename):
         i += 1
         new_structure = dock_one_water(tunnel_point, structure_data)
         with open(prefix_filename + "_%d"%i + ".pdb", 'w') as output:
+            output.write(box_data)
             output.writelines(new_structure)
 
     pass
