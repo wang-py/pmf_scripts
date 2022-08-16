@@ -54,26 +54,29 @@ def dock_one_water(tunnel_point, structure_pdb_data):
     new_water_pos = np.array([tunnel_point, new_HW1, new_HW2])
     water_i = 6507
 
-    structure_pdb_data = update_water_position(structure_pdb_data, water_i, new_water_pos)
+    structure_pdb_data_new = update_water_position(structure_pdb_data, water_i, new_water_pos)
 
-
-    pass
-
+    return structure_pdb_data_new
 
 # function that iterate through all tunnel positions and generate pdb configs with water
-def generate_configs(tunnel_points, structure_pdb):
+def generate_configs(tunnel_points, structure_pdb, prefix_filename):
     with open(structure_pdb, 'r') as spdb:
         structure_data = [line for line in spdb.readlines() if 'ATOM' in line]
     
+    i = 0
     for tunnel_point in tunnel_points:
-        dock_one_water(tunnel_point, structure_data)
+        i += 1
+        new_structure = dock_one_water(tunnel_point, structure_data)
+        with open(prefix_filename + "_%d"%i + ".pdb", 'w') as output:
+            output.writelines(new_structure)
 
     pass
 
 if __name__ == "__main__":
     input_structure = sys.argv[1]
     input_tunnel = sys.argv[2]
+    output_prefix = sys.argv[3]
     tunnel_points = read_tunnel_pdb(input_tunnel)
-    generate_configs(tunnel_points, input_structure)
+    generate_configs(tunnel_points, input_structure, output_prefix)
 
     pass
