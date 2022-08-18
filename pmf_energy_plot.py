@@ -8,6 +8,7 @@ import os
 from glob import glob
 import matplotlib.pyplot as plt
 import numpy as np
+from generate_pmf_configs_from_tunnel import read_tunnel_pdb
 
 def get_data_from_xvg(input_xvg):
     with open(input_xvg, 'r') as xvg:
@@ -29,7 +30,7 @@ def get_avg_deviation(input_arr):
     return mean_deviation
 
 def get_force(delta_pos, force_constant):
-    return delta_pos * force_constant
+    return -delta_pos * force_constant
 
 def get_vector(point_A, point_B):
     return point_B - point_A
@@ -48,10 +49,17 @@ def get_work_vs_site(tunnel_points, input_xvgs, k):
         vector = get_vector(tunnel_points[i], tunnel_points[i+1])
         work = get_work(force, vector)
         current_work += work
-        total_work.append(total_work)
+        total_work.append(current_work)
     
-    return total_work
+    return np.array(total_work)
 
+def plot_work_vs_site(total_work):
+    plt.plot(total_work, 'o-')
+    plt.title("work along the path")
+    plt.xlabel("site number")
+    plt.ylabel("Work [kJ/mol]")
+    plt.show()
+    pass
 
 def get_average_energy(input_xvg, k):
     data = get_data_from_xvg(input_xvg)
@@ -76,6 +84,10 @@ def plot_average_energy_vs_site(input_xvgs, k):
 
 if __name__ == '__main__':
     path = sys.argv[1]
-    force_constant = sys.argv[2]
+    tunnel_pdb = sys.argv[2]
+    force_constant = float(sys.argv[3])
     pos_files = sorted(glob(path + "/*_water.xvg"), key=os.path.getmtime)
+    tunnel_points = read_tunnel_pdb(tunnel_pdb)
+    total_work = get_work_vs_site(tunnel_points, pos_files, force_constant)
+    plot_work_vs_site(total_work)
     pass
