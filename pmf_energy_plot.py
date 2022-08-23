@@ -30,7 +30,7 @@ def get_avg_deviation(input_arr):
     return mean_deviation
 
 def get_force(delta_pos, force_constant):
-    return -delta_pos * force_constant
+    return delta_pos * force_constant
 
 def get_vector(point_A, point_B):
     return point_B - point_A
@@ -54,10 +54,11 @@ def get_work_vs_site(tunnel_points, input_xvgs, k):
     return np.array(total_work)
 
 def plot_work_vs_site(total_work):
-    plt.plot(total_work, 'o-')
+    site_number = np.arange(1, len(total_work)+1)
+    plt.plot(site_number, total_work, 'o-')
     plt.title("work along the path")
     plt.xlabel("site number")
-    plt.ylabel("Work [kJ/mol]")
+    plt.ylabel("Work done by protein[kJ/mol]")
     plt.show()
     pass
 
@@ -83,8 +84,11 @@ def plot_average_energy_vs_site(input_xvgs, k):
     pass
 
 if __name__ == '__main__':
+    # working directory that contains all xvgs
     path = sys.argv[1]
+    # pdb for tunnel points
     tunnel_pdb = sys.argv[2]
+    # force constant in kJ/mol/A^2
     force_constant = float(sys.argv[3])
     pos_files = sorted(glob(path + "/*_water.xvg"), key=os.path.getmtime)
     tunnel_points = read_tunnel_pdb(tunnel_pdb)
