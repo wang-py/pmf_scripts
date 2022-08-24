@@ -31,8 +31,10 @@ def plot_energy_vs_site(total_energies):
     sites = np.arange(total_energies.shape[0]) + 1
     plt.plot(sites, total_energies, 'o')
     plt.title("total energy vs site number")
+    plt.axhline(-42, color='k', linestyle='--', label='energy of water in bulk 42 kJ/mol')
     plt.xlabel("site number")
     plt.ylabel("energy (Coulomb + LJ) [kJ/mol]")
+    plt.legend()
     plt.show()
     pass
 
