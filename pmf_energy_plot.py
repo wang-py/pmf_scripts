@@ -91,6 +91,18 @@ def plot_average_energy_vs_site(input_xvgs, k):
     plt.show()
     pass
 
+def plot_work_and_total_work(work_vs_site):
+    total_work = get_total_work_vs_site(work_vs_site)
+    site_number = np.arange(work_vs_site.shape[0])+1
+    fig, ax = plt.subplots(2, 1, sharex=True)
+    ax[0].plot(site_number, work_vs_site, 'o')
+    ax[0].set_ylabel("Work (FdS) [kJ/mol]", fontsize=10)
+    ax[1].plot(site_number, total_work, 'o-')
+    ax[1].set_ylabel("Total work [kJ/mol]", fontsize=10)
+    ax[1].set_xlabel("site number", fontsize=10)
+
+    plt.show()
+
 if __name__ == '__main__':
     # working directory that contains all xvgs
     path = sys.argv[1]
@@ -101,6 +113,5 @@ if __name__ == '__main__':
     pos_files = sorted(glob(path + "/*_water.xvg"), key=os.path.getmtime)
     tunnel_points = read_tunnel_pdb(tunnel_pdb)
     work_vs_site = get_work_vs_site(tunnel_points, pos_files, force_constant)
-    total_work = get_total_work_vs_site(work_vs_site)
-    plot_work_vs_site(work_vs_site)
+    plot_work_and_total_work(work_vs_site)
     pass
