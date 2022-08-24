@@ -40,18 +40,26 @@ def get_work(force, path):
 
 def get_work_vs_site(tunnel_points, input_xvgs, k):
     number_of_sites = len(input_xvgs)
-    total_work = []
-    current_work = 0
+    work_vs_site = np.zeros(number_of_sites)
     for i in range(number_of_sites - 1):
         data = get_data_from_xvg(input_xvgs[i])
         mean_deviation = get_avg_deviation(data)
         force = get_force(mean_deviation, k)
         vector = get_vector(tunnel_points[i], tunnel_points[i+1])
         work = get_work(force, vector)
-        current_work += work
-        total_work.append(current_work)
+        work_vs_site[i] = work
     
-    return np.array(total_work)
+    return work_vs_site
+
+def get_total_work_vs_site(work_vs_site):
+    total_work = 0
+    number_of_sites = len(work_vs_site)
+    total_work_vs_site = np.zeros(number_of_sites)
+    for i in range(number_of_sites):
+        total_work += work_vs_site[i]
+        total_work_vs_site[i] = total_work
+    
+    return total_work_vs_site
 
 def plot_work_vs_site(total_work):
     site_number = np.arange(1, len(total_work)+1)
@@ -92,6 +100,7 @@ if __name__ == '__main__':
     force_constant = float(sys.argv[3])
     pos_files = sorted(glob(path + "/*_water.xvg"), key=os.path.getmtime)
     tunnel_points = read_tunnel_pdb(tunnel_pdb)
-    total_work = get_work_vs_site(tunnel_points, pos_files, force_constant)
-    plot_work_vs_site(total_work)
+    work_vs_site = get_work_vs_site(tunnel_points, pos_files, force_constant)
+    total_work = get_total_work_vs_site(work_vs_site)
+    plot_work_vs_site(work_vs_site)
     pass
