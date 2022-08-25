@@ -32,6 +32,17 @@ def get_avg_deviation(input_arr):
 def get_force(delta_pos, force_constant):
     return delta_pos * force_constant
 
+def get_force_vs_site(tunnel_points, input_xvgs, k):
+    number_of_sites = len(input_xvgs)
+    force_vs_site = np.zeros(number_of_sites)
+    for i in range(number_of_sites - 1):
+        data = get_data_from_xvg(input_xvgs[i])
+        mean_deviation = get_avg_deviation(data)
+        force = get_force(mean_deviation, k)
+        force_vs_site[i] = force
+    
+    return force_vs_site
+
 def get_vector(point_A, point_B):
     return point_B - point_A
 
