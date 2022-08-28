@@ -34,14 +34,14 @@ def get_force(delta_pos, force_constant):
 
 def get_force_vs_site(tunnel_points, input_xvgs, k):
     number_of_sites = len(input_xvgs)
-    force_vs_site = np.zeros(number_of_sites)
-    for i in range(number_of_sites - 1):
+    force_vs_site = []
+    for i in range(number_of_sites):
         data = get_data_from_xvg(input_xvgs[i])
         mean_deviation = get_avg_deviation(data)
         force = get_force(mean_deviation, k)
-        force_vs_site[i] = force
+        force_vs_site.append(force)
     
-    return force_vs_site
+    return np.array(force_vs_site)
 
 def get_vector(point_A, point_B):
     return point_B - point_A
@@ -125,4 +125,5 @@ if __name__ == '__main__':
     tunnel_points = read_tunnel_pdb(tunnel_pdb)
     work_vs_site = get_work_vs_site(tunnel_points, pos_files, force_constant)
     plot_work_and_total_work(work_vs_site)
+    force_vs_site = get_force_vs_site(tunnel_points, pos_files, force_constant)
     pass
