@@ -57,6 +57,6 @@ if __name__ == "__main__":
     output_tunnel_pdb = sys.argv[4]
     force_vs_site = get_force_vs_site(tunnel_points, pos_files, k)
     tunnel_pdb_data = get_pdb_data(tunnel_pdb)[1]
-    optimized_pdb_data = update_tunnel_point_position(tunnel_pdb_data, tunnel_points, force_vs_site, 1)
+    optimized_pdb_data = update_tunnel_point_position(tunnel_pdb_data, tunnel_points, force_vs_site, 5)
     write_tunnel_points(optimized_pdb_data, output_tunnel_pdb)
     pass
