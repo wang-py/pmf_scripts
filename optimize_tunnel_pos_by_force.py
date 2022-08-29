@@ -22,7 +22,7 @@ def normalize_force_vectors(force_vs_site):
     return force_vs_site / max_norm
 
 def update_tunnel_point_position(tunnel_pdb_data, tunnel_points, force_vs_site, delta_pos):
-    num_of_pts = tunnel_pdb_data.shape[0]
+    num_of_pts = len(tunnel_pdb_data)
     normalized_force = normalize_force_vectors(force_vs_site)
     new_tunnel_pdb_data = []
     for i in range(num_of_pts):
@@ -39,13 +39,15 @@ def update_tunnel_point_position(tunnel_pdb_data, tunnel_points, force_vs_site, 
     return new_tunnel_pdb_data
 
 if __name__ == "__main__":
-    # pdb file of the tunnel points
-    tunnel_pdb = sys.argv[1]
-    tunnel_points = read_tunnel_pdb(tunnel_pdb)
     # working directory that contains all water position xvgs
-    pos_folder = sys.argv[2]
+    pos_folder = sys.argv[1]
     pos_files = sorted(glob(pos_folder + "/*_water.xvg"), key=os.path.getmtime)
+    # pdb file of the tunnel points
+    tunnel_pdb = sys.argv[2]
+    tunnel_points = read_tunnel_pdb(tunnel_pdb)
     # force constant in kJ/mol/A^2
     k = float(sys.argv[3])
     force_vs_site = get_force_vs_site(tunnel_points, pos_files, k)
+    tunnel_pdb_data = get_pdb_data(tunnel_pdb)[1]
+    optimized_pdb_data = update_tunnel_point_position(tunnel_pdb_data, tunnel_points, force_vs_site, 1)
     pass
