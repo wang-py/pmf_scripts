@@ -28,17 +28,24 @@ def get_avg_displacement(input_data):
     displacement = np.linalg.norm(deviation)
     return displacement
 
-#def get_std_displacement(input_data):
-#    input_data
+def get_std_displacement(input_data):
+    p0 = input_data[0, :]
+    deviations = input_data - p0
+    displacements = [np.linalg.norm(x) for x in deviations]
+    std = np.std(displacements)
 
-def get_displacement_vs_site(input_xvgs):
+    return std
+
+def get_displacement_and_std_vs_site(input_xvgs):
     num_of_pts = len(input_xvgs)
     displacement_vs_site = np.zeros(num_of_pts)
+    std_vs_site = np.zeros(num_of_pts)
     for i in range(num_of_pts):
         data = get_data_from_xvg(input_xvgs[i])
         displacement_vs_site[i] = get_avg_displacement(data)
+        std_vs_site[i] = get_std_displacement(data)
 
-    return displacement_vs_site
+    return displacement_vs_site, std_vs_site
 
 def get_force(delta_pos, force_constant):
     return delta_pos * force_constant
@@ -101,12 +108,14 @@ def get_average_energy(input_xvg, k):
     return mean_energy
 
 def plot_average_displacement_vs_site(input_xvgs):
-    displacement_vs_site = get_displacement_vs_site(input_xvgs)
+    displacement_vs_site, std_vs_site = get_displacement_and_std_vs_site(input_xvgs)
     sites = np.arange(1, len(displacement_vs_site) + 1)
     plt.plot(sites, displacement_vs_site, 'o')
+    plt.errorbar(sites, displacement_vs_site, yerr=std_vs_site, capsize=3, ls='none', label="errorbar") 
     plt.xlabel("site number")
     plt.ylabel("average displacement [A]")
     plt.title("average displacement vs. site number")
+    plt.legend()
     plt.show()
     pass
 
