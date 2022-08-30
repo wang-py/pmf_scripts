@@ -53,10 +53,12 @@ if __name__ == "__main__":
     tunnel_points = read_tunnel_pdb(tunnel_pdb)
     # force constant in kJ/mol/A^2
     k = float(sys.argv[3])
+    # step size
+    step_size = float(sys.argv[4])
     # output tunnel pdb filename
-    output_tunnel_pdb = sys.argv[4]
+    output_tunnel_pdb = sys.argv[5]
     force_vs_site = get_force_vs_site(tunnel_points, pos_files, k)
     tunnel_pdb_data = get_pdb_data(tunnel_pdb)[1]
-    optimized_pdb_data = update_tunnel_point_position(tunnel_pdb_data, tunnel_points, force_vs_site, 5)
+    optimized_pdb_data = update_tunnel_point_position(tunnel_pdb_data, tunnel_points, force_vs_site, step_size)
     write_tunnel_points(optimized_pdb_data, output_tunnel_pdb)
     pass
