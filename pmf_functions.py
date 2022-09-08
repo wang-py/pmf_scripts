@@ -77,11 +77,13 @@ def get_work_vs_site(tunnel_points, input_xvgs, k):
         mean_deviation = get_avg_deviation(data)
         mean_deviation_next = get_avg_deviation(data_next)
         force = get_force(mean_deviation, k)
+        force_next = get_force(mean_deviation_next, k)
+        avg_force = (force + force_next) / 2
         # evaluate work at new equilibrium
         p1 = tunnel_points[i] + mean_deviation
         p2 = tunnel_points[i+1] + mean_deviation_next
         vector = get_vector(p1, p2)
-        work = get_work(force, vector)
+        work = get_work(avg_force, vector)
         work_vs_site[i] = work
     
     return work_vs_site
@@ -153,7 +155,10 @@ def plot_work_and_total_work(work_vs_site):
 
 def plot_work_and_energy(work_vs_site, energy_vs_site, k):
     total_work = get_total_work_vs_site(work_vs_site)
+    shift = total_work[0] - energy_vs_site[0]
+    total_work -= shift
     site_number = np.arange(work_vs_site.shape[0])+1
+    shift = work_vs_site[0] - energy_vs_site[1]
     fontsize=12
     fig, ax1 = plt.subplots()
     plt.suptitle("Work and energy vs. site at k=%.1f kJ/mol/A^2"%k)
