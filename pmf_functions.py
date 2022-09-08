@@ -3,7 +3,6 @@ import sys
 import os
 from glob import glob
 import matplotlib.pyplot as plt
-from matplotlib.ticker import (AutoMinorLocator, MultipleLocator)
 import numpy as np
 
 def get_data_from_xvg(input_xvg):
@@ -162,7 +161,6 @@ def plot_work_and_energy(work_vs_site, energy_vs_site, k):
     ax1.plot(site_number, energy_vs_site, 'bo-', label='gromacs energy')
     #ax1.set_ylabel("Total work [kJ/mol]", fontsize=fontsize, color='red')
     ax1.legend()
-    ax1.yaxis.set_major_locator(MultipleLocator(20))
     ax1.set_xlabel("site number")
     #ax1.tick_params(axis='y', labelcolor='red')
     #ax1.set_ylim(np.min(energy_vs_site), np.max(work_vs_site))
