@@ -150,3 +150,20 @@ def plot_work_and_total_work(work_vs_site):
     ax[1].set_xlabel("site number", fontsize=10)
 
     plt.show()
+
+def plot_work_and_energy(work_vs_site, energy_vs_site, k):
+    total_work = get_total_work_vs_site(work_vs_site)
+    site_number = np.arange(work_vs_site.shape[0])+1
+    fontsize=12
+    fig, ax1 = plt.subplots()
+    plt.suptitle("Work and energy vs. site at k=%.1f kJ/mol/A^2"%k)
+    ax1.plot(site_number, total_work, 'ro-',)
+    ax1.set_ylabel("Total work [kJ/mol]", fontsize=fontsize, color='red')
+    ax1.set_xlabel("site number")
+    ax1.tick_params(axis='y', labelcolor='red')
+    ax2 = ax1.twinx()
+    ax2.set_ylabel("gromacs energy [kJ/mol]", fontsize=fontsize, color='blue')
+    ax2.plot(site_number, energy_vs_site, 'bo-')
+    ax2.tick_params(axis='y', labelcolor='blue')
+
+    plt.show()
