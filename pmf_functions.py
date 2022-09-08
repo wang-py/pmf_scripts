@@ -48,7 +48,7 @@ def get_displacement_and_std_vs_site(input_xvgs):
     return displacement_vs_site, std_vs_site
 
 def get_force(delta_pos, force_constant):
-    return delta_pos * force_constant
+    return -delta_pos * force_constant
 
 def get_force_vs_site(tunnel_points, input_xvgs, k):
     number_of_sites = len(input_xvgs)
