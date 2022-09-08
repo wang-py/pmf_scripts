@@ -1,3 +1,4 @@
+from pkgutil import get_data
 import sys
 import os
 from glob import glob
@@ -48,7 +49,7 @@ def get_displacement_and_std_vs_site(input_xvgs):
     return displacement_vs_site, std_vs_site
 
 def get_force(delta_pos, force_constant):
-    return delta_pos * force_constant
+    return -delta_pos * force_constant
 
 def get_force_vs_site(tunnel_points, input_xvgs, k):
     number_of_sites = len(input_xvgs)
@@ -72,9 +73,14 @@ def get_work_vs_site(tunnel_points, input_xvgs, k):
     work_vs_site = np.zeros(number_of_sites)
     for i in range(number_of_sites - 1):
         data = get_data_from_xvg(input_xvgs[i])
+        data_next = get_data_from_xvg(input_xvgs[i+1])
         mean_deviation = get_avg_deviation(data)
+        mean_deviation_next = get_avg_deviation(data_next)
         force = get_force(mean_deviation, k)
-        vector = get_vector(tunnel_points[i], tunnel_points[i+1])
+        # evaluate work at new equilibrium
+        p1 = tunnel_points[i] + mean_deviation
+        p2 = tunnel_points[i+1] + mean_deviation_next
+        vector = get_vector(p1, p2)
         work = get_work(force, vector)
         work_vs_site[i] = work
     
