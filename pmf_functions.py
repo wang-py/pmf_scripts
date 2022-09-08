@@ -3,6 +3,7 @@ import sys
 import os
 from glob import glob
 import matplotlib.pyplot as plt
+from matplotlib.ticker import (AutoMinorLocator, MultipleLocator)
 import numpy as np
 
 def get_data_from_xvg(input_xvg):
