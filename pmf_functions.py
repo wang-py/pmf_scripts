@@ -29,6 +29,9 @@ def get_avg_displacement(input_data):
     displacement = np.linalg.norm(deviation)
     return displacement
 
+def get_avg_position(input_data):
+    return np.mean(input_data, axis=0)
+
 def get_std_displacement(input_data):
     p0 = input_data[0, :]
     deviations = input_data - p0
@@ -47,6 +50,17 @@ def get_displacement_and_std_vs_site(input_xvgs):
         std_vs_site[i] = get_std_displacement(data)
 
     return displacement_vs_site, std_vs_site
+
+def get_reaction_coordinate(input_xvgs):
+    coord = np.zeros(len(input_xvgs))
+    disp_i = 0
+    for i in range(1, len(input_xvgs)):
+        pos_i = get_avg_position(get_data_from_xvg(input_xvgs[i]))
+        pos_prev = get_avg_position(get_data_from_xvg(input_xvgs[i-1]))
+        disp_i += np.linalg.norm(pos_i - pos_prev)
+        coord[i] = disp_i
+    
+    return coord
 
 def get_force(delta_pos, force_constant):
     return -delta_pos * force_constant
@@ -140,33 +154,34 @@ def plot_average_energy_vs_site(input_xvgs, k):
     plt.show()
     pass
 
-def plot_work_and_total_work(work_vs_site):
+def plot_work_and_total_work(work_vs_site, react_coord):
     total_work = get_total_work_vs_site(work_vs_site)
-    site_number = np.arange(work_vs_site.shape[0])+1
+    #site_number = np.arange(work_vs_site.shape[0])+1
     fig, ax = plt.subplots(2, 1, sharex=True)
     plt.suptitle("Work done by the protein vs. site")
-    ax[0].plot(site_number, work_vs_site, 'o')
+    ax[0].plot(react_coord, work_vs_site, 'o')
     ax[0].set_ylabel("Work (FdS) [kJ/mol]", fontsize=10)
-    ax[1].plot(site_number, total_work, 'o-')
+    ax[1].plot(react_coord, total_work, 'o-')
     ax[1].set_ylabel("Total work [kJ/mol]", fontsize=10)
-    ax[1].set_xlabel("site number", fontsize=10)
+    ax[1].set_xlabel("reaction coordinate [A]", fontsize=10)
 
     plt.show()
 
-def plot_work_and_energy(work_vs_site, energy_vs_site, k):
+def plot_work_and_energy(work_vs_site, energy_vs_site, react_coord, k):
     total_work = get_total_work_vs_site(work_vs_site)
     shift = total_work[0] - energy_vs_site[0]
     total_work -= shift
-    site_number = np.arange(work_vs_site.shape[0])+1
+    #site_number = np.arange(total_work.shape[0])
     shift = work_vs_site[0] - energy_vs_site[1]
     fontsize=12
     fig, ax1 = plt.subplots()
     plt.suptitle("Work and energy vs. site at k=%.1f kJ/mol/A^2"%k)
-    ax1.plot(site_number, total_work, 'ro-',label='total work')
-    ax1.plot(site_number, energy_vs_site, 'bo-', label='gromacs energy')
+    ax1.set_xlabel("reaction coordinate [A]")
+    ax1.set_ylabel("energy and work [kJ/mol]")
+    ax1.plot(react_coord, total_work, 'ro-',label='total work')
+    ax1.plot(react_coord, energy_vs_site, 'bo-', label='gromacs energy')
     #ax1.set_ylabel("Total work [kJ/mol]", fontsize=fontsize, color='red')
     ax1.legend()
-    ax1.set_xlabel("site number")
     #ax1.tick_params(axis='y', labelcolor='red')
     #ax1.set_ylim(np.min(energy_vs_site), np.max(work_vs_site))
     #ax2 = ax1.twinx()
