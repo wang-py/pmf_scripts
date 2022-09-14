@@ -3,6 +3,7 @@ import sys
 import os
 from glob import glob
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 import numpy as np
 
 def get_data_from_xvg(input_xvg):
@@ -158,7 +159,7 @@ def plot_work_and_total_work(work_vs_site, react_coord):
     total_work = get_total_work_vs_site(work_vs_site)
     #site_number = np.arange(work_vs_site.shape[0])+1
     fig, ax = plt.subplots(2, 1, sharex=True)
-    plt.suptitle("Work done by the protein vs. site")
+    plt.suptitle("Work done vs. site")
     ax[0].plot(react_coord, work_vs_site, 'o')
     ax[0].set_ylabel("Work (FdS) [kJ/mol]", fontsize=10)
     ax[1].plot(react_coord, total_work, 'o-')
@@ -171,13 +172,22 @@ def plot_work_and_energy(work_vs_site, energy_vs_site, react_coord, k):
     total_work = get_total_work_vs_site(work_vs_site)
     shift = total_work[0] - energy_vs_site[0]
     total_work -= shift
-    #site_number = np.arange(total_work.shape[0])
-    shift = work_vs_site[0] - energy_vs_site[1]
+    site_number = np.arange(total_work.shape[0]) + 1
     fontsize=12
     fig, ax1 = plt.subplots()
     plt.suptitle("Work and energy vs. site at k=%.1f kJ/mol/A^2"%k)
     ax1.set_xlabel("reaction coordinate [A]")
     ax1.set_ylabel("energy and work [kJ/mol]")
+    ax1.vlines(react_coord, 0, 1, transform=ax1.get_xaxis_transform(), linestyles='dashed', color='k')
+    ax1.set_xticks(react_coord)
+    ax1.set_xticklabels(react_coord)
+    ax1.xaxis.set_major_formatter(mtick.FormatStrFormatter('%.2f'))
+    ax1.tick_params(axis='x', labelsize=8)
+    ax2 = ax1.secondary_xaxis('top')
+    ax2.set_xticks(react_coord)
+    ax2.set_xticklabels(site_number)
+    ax2.set_xlabel("site number")
+    plt.setp(ax1.get_xticklabels(), rotation=30, horizontalalignment='right')
     ax1.plot(react_coord, total_work, 'ro-',label='total work')
     ax1.plot(react_coord, energy_vs_site, 'bo-', label='gromacs energy')
     ax1.legend()
