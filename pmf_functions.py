@@ -99,7 +99,7 @@ def get_work_vs_site(tunnel_points, input_xvgs, k):
         p2 = tunnel_points[i+1] + mean_deviation_next
         vector = get_vector(p1, p2)
         work = get_work(avg_force, vector)
-        work_vs_site[i] = work
+        work_vs_site[i+1] = work
     
     return work_vs_site
 
