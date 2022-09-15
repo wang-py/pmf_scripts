@@ -175,10 +175,11 @@ def plot_work_and_energy(work_vs_site, energy_vs_site, react_coord, k):
     site_number = np.arange(total_work.shape[0]) + 1
     fontsize=12
     fig, ax1 = plt.subplots()
-    plt.suptitle("Work and energy vs. site at k=%.1f kJ/mol/A^2"%k)
+    plt.suptitle("Work and energy at k=%.1f kJ/mol/A^2"%k)
     ax1.set_xlabel("reaction coordinate [A]")
     ax1.set_ylabel("energy and work [kJ/mol]")
-    ax1.vlines(react_coord, 0, 1, transform=ax1.get_xaxis_transform(), linestyles='dashed', color='k')
+    ax1.axhline(-42, color='k', linestyle='--', label='energy of water in bulk -42 kJ/mol')
+    ax1.vlines(react_coord, 0, 1, transform=ax1.get_xaxis_transform(), linestyles='solid', linewidth=1, color='k')
     ax1.set_xticks(react_coord)
     ax1.set_xticklabels(react_coord)
     ax1.xaxis.set_major_formatter(mtick.FormatStrFormatter('%.1f'))
