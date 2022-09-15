@@ -159,7 +159,7 @@ def plot_work_and_total_work(work_vs_site, react_coord):
     total_work = get_total_work_vs_site(work_vs_site)
     #site_number = np.arange(work_vs_site.shape[0])+1
     fig, ax = plt.subplots(2, 1, sharex=True)
-    plt.suptitle("Work done vs. site")
+    plt.suptitle("Work done along the path")
     ax[0].plot(react_coord, work_vs_site, 'o')
     ax[0].set_ylabel("Work (FdS) [kJ/mol]", fontsize=10)
     ax[1].plot(react_coord, total_work, 'o-')
