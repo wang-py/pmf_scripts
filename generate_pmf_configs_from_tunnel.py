@@ -81,6 +81,14 @@ def dock_one_water(tunnel_point, structure_pdb_data):
 
     return structure_pdb_data_new
 
+def get_structure_data(structure_pdb):
+    with open(structure_pdb, 'r') as spdb:
+        box_data = [line for line in spdb.readlines() if 'CRYST' in line][0]
+        spdb.seek(0,0)
+        structure_data = [line for line in spdb.readlines() if 'ATOM' in line]
+
+    return box_data, structure_data    
+
 def generate_configs(tunnel_points, structure_pdb, prefix_filename):
     """
     function that iterates through all tunnel positions and generate pdb configs with water
@@ -96,10 +104,7 @@ def generate_configs(tunnel_points, structure_pdb, prefix_filename):
 
     ----------------------------------------------------------------------------
     """
-    with open(structure_pdb, 'r') as spdb:
-        box_data = [line for line in spdb.readlines() if 'CRYST' in line][0]
-        spdb.seek(0,0)
-        structure_data = [line for line in spdb.readlines() if 'ATOM' in line]
+    box_data, structure_data = get_structure_data(structure_pdb)
     
     i = 0
     for tunnel_point in tunnel_points:
