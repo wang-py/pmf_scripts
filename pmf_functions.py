@@ -142,16 +142,25 @@ def plot_average_displacement_vs_site(input_xvgs):
     plt.show()
     pass
 
-def plot_average_energy_vs_site(input_xvgs, k):
-    mean_energy = []
-    for xvg in input_xvgs:
-        mean_energy.append(get_average_energy(xvg,k))
-
-    site_number = np.arange(1, len(mean_energy)+1)
-    plt.scatter(site_number, mean_energy)
-    plt.title("average energy vs. dowser prediction sites")
-    plt.xlabel("site number")
-    plt.ylabel("average energy [kJ/mol]")
+def plot_average_energy_vs_site(energy_vs_site, react_coord):
+    site_number = np.arange(1, len(energy_vs_site)+1)
+    fig, ax1 = plt.subplots()
+    plt.suptitle("energy along the reaction coordinate")
+    ax1.set_xlabel("reaction coordinate [A]")
+    ax1.set_ylabel("energy [kJ/mol]")
+    ax1.axhline(-42, color='k', linestyle='--', label='energy of water in bulk -42 kJ/mol')
+    ax1.vlines(react_coord, 0, 1, transform=ax1.get_xaxis_transform(), linestyles='solid', linewidth=1, color='k')
+    ax1.set_xticks(react_coord)
+    ax1.set_xticklabels(react_coord)
+    ax1.xaxis.set_major_formatter(mtick.FormatStrFormatter('%.1f'))
+    ax1.tick_params(axis='x', labelsize=8)
+    ax2 = ax1.secondary_xaxis('top')
+    ax2.set_xticks(react_coord)
+    ax2.set_xticklabels(site_number)
+    ax2.set_xlabel("site number")
+    plt.setp(ax1.get_xticklabels(), rotation=45, horizontalalignment='right')
+    ax1.plot(react_coord, energy_vs_site, 'bo', label='gromacs energy')
+    ax1.legend()
     plt.show()
     pass
 
