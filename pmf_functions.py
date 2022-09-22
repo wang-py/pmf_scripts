@@ -130,6 +130,17 @@ def get_average_energy(input_xvg, k):
 
     return mean_energy
 
+def get_site_numbering_from_xvgs(input_xvgs):
+    site_number = []
+    for xvg in input_xvgs:
+        number = xvg.split('_')[4]
+        site_number.append(number)
+
+    return site_number
+
+def sort_files_by_number(input):
+    return float(input.split('_')[4])
+
 def plot_average_displacement_vs_site(input_xvgs):
     displacement_vs_site, std_vs_site = get_displacement_and_std_vs_site(input_xvgs)
     sites = np.arange(1, len(displacement_vs_site) + 1)
@@ -142,8 +153,7 @@ def plot_average_displacement_vs_site(input_xvgs):
     plt.show()
     pass
 
-def plot_average_energy_vs_site(energy_vs_site, react_coord):
-    site_number = np.arange(1, len(energy_vs_site)+1)
+def plot_average_energy_vs_site(energy_vs_site, react_coord, site_number):
     fig, ax1 = plt.subplots()
     plt.suptitle("energy along the reaction coordinate")
     ax1.set_xlabel("reaction coordinate [A]")
