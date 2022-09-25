@@ -177,6 +177,57 @@ def plot_average_energy_vs_site(energy_vs_site, react_coord, site_number):
     plt.show()
     pass
 
+def pdb_to_tunnel_points_radii(tunnel_pdb):
+    """
+    a function that parses the tunnel profiles pdb. 
+    This function outputs an array of coordinates and sizes.
+    ---------------------------------------------------------------------------
+    tunnel_pdb: str
+    filename of the tunnel profile pdb
+
+    ----------------------------------------------------------------------------
+    Returns:
+    tunnel_points: ndarray
+    n x 1 numpy array of tunnel point radii in Angstroms
+
+    """
+    # read in the pdb file
+    tunnel_points_radii = []
+    pdb_file = open(tunnel_pdb)
+    pdb_file = [line for line in pdb_file if 'ATOM' in line]
+    for line in pdb_file:
+        line_arr = line.split()
+        # read in the b-factor(radius)
+        radius = float(line_arr[10])
+        tunnel_points_radii.append(radius)
+
+    return np.array(tunnel_points_radii)
+
+def plot_radii_energy_vs_site(radii_vs_site, energy_vs_site, react_coord, site_number):
+    fig, ax1 = plt.subplots()
+    plt.suptitle("energy along the reaction coordinate")
+    ax1.set_xlabel("reaction coordinate [A]")
+    ax1.set_ylabel("energy [kJ/mol]")
+    ax1.axhline(-42, color='k', linestyle='--', label='energy of water in bulk -42 kJ/mol')
+    ax1.vlines(react_coord, 0, 1, transform=ax1.get_xaxis_transform(), linestyles='solid', linewidth=1, color='k')
+    ax1.set_xticks(react_coord)
+    ax1.set_xticklabels(react_coord)
+    ax1.xaxis.set_major_formatter(mtick.FormatStrFormatter('%.1f'))
+    ax1.tick_params(axis='x', labelsize=8)
+    plot_1 = ax1.plot(react_coord, energy_vs_site, 'bo-', label='gromacs energy')
+    ax2 = ax1.secondary_xaxis('top')
+    ax2.set_xticks(react_coord)
+    ax2.set_xticklabels(site_number)
+    ax2.set_xlabel("site number")
+    ax3 = ax1.twinx()
+    plot_2 = ax3.plot(radii_vs_site, 'ro-', label='caver radii')
+    plt.setp(ax1.get_xticklabels(), rotation=45, horizontalalignment='right')
+    lns = plot_1 + plot_2
+    labels = [l.get_label() for l in lns]
+    plt.legend(lns, labels, loc=0)
+    plt.show()
+    pass
+
 def plot_work_and_total_work(work_vs_site, react_coord):
     total_work = get_total_work_vs_site(work_vs_site)
     #site_number = np.arange(work_vs_site.shape[0])+1

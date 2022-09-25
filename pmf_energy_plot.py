@@ -23,6 +23,8 @@ if __name__ == '__main__':
     react_coord = get_reaction_coordinate(pos_files)
     #plot_work_and_energy(work_vs_site, energies, react_coord, force_constant)
     #plot_work_and_total_work(work_vs_site, react_coord)
-    plot_average_energy_vs_site(energies, react_coord, site_number)
+    #plot_average_energy_vs_site(energies, react_coord, site_number)
+    radii_vs_site = pdb_to_tunnel_points_radii(tunnel_pdb)
+    plot_radii_energy_vs_site(radii_vs_site, energies, react_coord, site_number)
     #force_vs_site = get_force_vs_site(tunnel_points, pos_files, force_constant)
     pass
