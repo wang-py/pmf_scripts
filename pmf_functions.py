@@ -5,6 +5,7 @@ from glob import glob
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import numpy as np
+import mpl_axes_aligner
 
 def get_data_from_xvg(input_xvg):
     with open(input_xvg, 'r') as xvg:
@@ -203,7 +204,7 @@ def pdb_to_tunnel_points_radii(tunnel_pdb):
 
     return np.array(tunnel_points_radii)
 
-def plot_radii_energy_vs_site(radii_vs_site, energy_vs_site, react_coord, site_number):
+def plot_radii_energy_vs_site(radii_vs_site, energy_vs_site, react_coord, react_coord_caver, site_number):
     fig, ax1 = plt.subplots()
     plt.suptitle("energy along the reaction coordinate")
     ax1.set_xlabel("reaction coordinate [A]")
@@ -220,7 +221,9 @@ def plot_radii_energy_vs_site(radii_vs_site, energy_vs_site, react_coord, site_n
     ax2.set_xticklabels(site_number)
     ax2.set_xlabel("site number")
     ax3 = ax1.twinx()
-    plot_2 = ax3.plot(radii_vs_site, 'ro-', label='caver radii')
+    plot_2 = ax3.plot(react_coord_caver, radii_vs_site, 'ro-', label='caver radii')
+    ax3.set_ylabel("caver radii [A]")
+    mpl_axes_aligner.align.yaxes(ax1, -42, ax3, 1.4)
     plt.setp(ax1.get_xticklabels(), rotation=45, horizontalalignment='right')
     lns = plot_1 + plot_2
     labels = [l.get_label() for l in lns]
