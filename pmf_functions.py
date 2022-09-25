@@ -141,6 +141,9 @@ def get_site_numbering_from_xvgs(input_xvgs):
 def sort_files_by_number(input):
     return float(input.split('_')[4])
 
+def sort_energy_files_by_number(input):
+    return float(input.split('_')[5])
+
 def plot_average_displacement_vs_site(input_xvgs):
     displacement_vs_site, std_vs_site = get_displacement_and_std_vs_site(input_xvgs)
     sites = np.arange(1, len(displacement_vs_site) + 1)
@@ -169,7 +172,7 @@ def plot_average_energy_vs_site(energy_vs_site, react_coord, site_number):
     ax2.set_xticklabels(site_number)
     ax2.set_xlabel("site number")
     plt.setp(ax1.get_xticklabels(), rotation=45, horizontalalignment='right')
-    ax1.plot(react_coord, energy_vs_site, 'bo', label='gromacs energy')
+    ax1.plot(react_coord, energy_vs_site, 'bo-', label='gromacs energy')
     ax1.legend()
     plt.show()
     pass

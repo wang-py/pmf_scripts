@@ -15,7 +15,7 @@ if __name__ == '__main__':
     pos_files = sorted(glob(path + "/*_water.xvg"), key=sort_files_by_number)
     #pos_files = [file for file in pos_files if 'adjusted' not in file]
     site_number = get_site_numbering_from_xvgs(pos_files)
-    energy_files = sorted(glob(energy_path + "/*_energy.xvg"), key=sort_files_by_number)
+    energy_files = sorted(glob(energy_path + "/*_energy.xvg"), key=sort_energy_files_by_number)
     #energy_files = [file for file in energy_files if 'adjusted' not in file]
     energies = get_energy_vs_site(energy_files)
     tunnel_points = read_tunnel_pdb(tunnel_pdb)
