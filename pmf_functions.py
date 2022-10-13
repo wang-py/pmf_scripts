@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import numpy as np
 import mpl_axes_aligner
+from os.path import exists
 
 def get_data_from_xvg(input_xvg):
     with open(input_xvg, 'r') as xvg:
@@ -269,3 +270,55 @@ def plot_work_and_energy(work_vs_site, energy_vs_site, react_coord, k):
     ax1.plot(react_coord, energy_vs_site, 'bo-', label='gromacs energy')
     ax1.legend()
     plt.show()
+
+def output_plot_files(radii, gromacs_energy, work, react_coord, react_coord_caver):
+    radii_f = 'radii.txt'
+    gromacs_energy_f = 'gromacs_energy.txt'
+    work_f = 'work.txt'
+    react_coord_f = 'react_coord.txt'
+    react_coord_caver_f = 'react_coord_caver.txt'
+    with open(radii_f, 'w') as rf:
+        rf.writelines(radii.astype(str))
+    with open(gromacs_energy_f, 'w') as gf:
+        gf.writelines(gromacs_energy.astype(str))
+    with open(work_f, 'w') as wf:
+        wf.writelines(work.astype(str))
+    with open(react_coord_f, 'w') as rcf:
+        rcf.writelines(react_coord.astype(str))
+    with open(react_coord_caver_f, 'w') as rccf:
+        rccf.writelines(react_coord_caver.astype(str))
+    pass
+
+def is_cached(directory):
+    radii = exists(directory + 'radii.txt')
+    gromacs_energy = exists(directory + 'gromacs_energy.txt')
+    work = exists(directory + 'work.txt')
+    react_coord = exists(directory + 'react_coord.txt')
+    react_coord_caver_f = exists(directory + 'react_coord_caver_f.txt')
+    if radii and gromacs_energy and work and react_coord and react_coord_caver_f:
+        return True
+    return False
+
+def read_cached_files(directory):
+    radii_f = 'radii.txt'
+    gromacs_energy_f = 'gromacs_energy.txt'
+    work_f = 'work.txt'
+    react_coord_f = 'react_coord.txt'
+    react_coord_caver_f = 'react_coord_caver.txt'
+    with open(radii_f, 'r') as rf:
+        rf.readlines(radii_f)
+    rf = np.array([float(line) for line in rf])
+    with open(gromacs_energy_f, 'r') as gf:
+        gf.readlines(gromacs_energy_f)
+    gf = np.array([float(line) for line in gf])
+    with open(work_f, 'r') as wf:
+        wf.readlines(work_f)
+    wf = np.array([float(line) for line in wf])
+    with open(react_coord_f, 'r') as rcf:
+        rcf.readlines(react_coord_f)
+    rcf = np.array([float(line) for line in rcf])
+    with open(react_coord_caver_f, 'r') as rccf:
+        rccf.readlines(react_coord_caver_f)
+    rccf = np.array([float(line) for line in rccf])
+
+    return rf, gf, rcf, rccf
