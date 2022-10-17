@@ -135,10 +135,10 @@ def get_average_energy(input_xvg, k):
 def get_site_numbering_from_xvgs(input_xvgs):
     site_number = []
     for xvg in input_xvgs:
-        number = xvg.split('_')[4]
+        number = int(xvg.split('_')[4])
         site_number.append(number)
 
-    return site_number
+    return np.array(site_number)
 
 def sort_files_by_number(input):
     return float(input.split('_')[4])
@@ -264,6 +264,7 @@ def plot_work_and_energy(work_vs_site, energy_vs_site, react_coord, k):
     ax2 = ax1.secondary_xaxis('top')
     ax2.set_xticks(react_coord)
     ax2.set_xticklabels(site_number)
+    ax2.xaxis.set_major_formatter(mtick.FormatStrFormatter('%i'))
     ax2.set_xlabel("site number")
     plt.setp(ax1.get_xticklabels(), rotation=45, horizontalalignment='right')
     ax1.plot(react_coord, total_work, 'ro-',label='total work')
@@ -271,54 +272,44 @@ def plot_work_and_energy(work_vs_site, energy_vs_site, react_coord, k):
     ax1.legend()
     plt.show()
 
-def output_plot_files(radii, gromacs_energy, work, react_coord, react_coord_caver):
+def output_plot_files(site_number, radii, gromacs_energy, work, react_coord, react_coord_caver):
+    site_number_f = 'site_number.txt'
     radii_f = 'radii.txt'
     gromacs_energy_f = 'gromacs_energy.txt'
     work_f = 'work.txt'
     react_coord_f = 'react_coord.txt'
     react_coord_caver_f = 'react_coord_caver.txt'
-    with open(radii_f, 'w') as rf:
-        rf.writelines(radii.astype(str))
-    with open(gromacs_energy_f, 'w') as gf:
-        gf.writelines(gromacs_energy.astype(str))
-    with open(work_f, 'w') as wf:
-        wf.writelines(work.astype(str))
-    with open(react_coord_f, 'w') as rcf:
-        rcf.writelines(react_coord.astype(str))
-    with open(react_coord_caver_f, 'w') as rccf:
-        rccf.writelines(react_coord_caver.astype(str))
+    np.savetxt(site_number_f, site_number, fmt='%d')
+    np.savetxt(radii_f, radii)
+    np.savetxt(gromacs_energy_f, gromacs_energy)
+    np.savetxt(work_f, work)
+    np.savetxt(react_coord_f, react_coord)
+    np.savetxt(react_coord_caver_f, react_coord_caver)
     pass
 
 def is_cached(directory):
-    radii = exists(directory + 'radii.txt')
-    gromacs_energy = exists(directory + 'gromacs_energy.txt')
-    work = exists(directory + 'work.txt')
-    react_coord = exists(directory + 'react_coord.txt')
-    react_coord_caver_f = exists(directory + 'react_coord_caver_f.txt')
-    if radii and gromacs_energy and work and react_coord and react_coord_caver_f:
+    site_number = exists(directory + '/site_number.txt')
+    radii = exists(directory + '/radii.txt')
+    gromacs_energy = exists(directory + '/gromacs_energy.txt')
+    work = exists(directory + '/work.txt')
+    react_coord = exists(directory + '/react_coord.txt')
+    react_coord_caver = exists(directory + '/react_coord_caver.txt')
+    if radii and gromacs_energy and work and react_coord and react_coord_caver:
         return True
     return False
 
 def read_cached_files(directory):
-    radii_f = 'radii.txt'
-    gromacs_energy_f = 'gromacs_energy.txt'
-    work_f = 'work.txt'
-    react_coord_f = 'react_coord.txt'
-    react_coord_caver_f = 'react_coord_caver.txt'
-    with open(radii_f, 'r') as rf:
-        rf.readlines(radii_f)
-    rf = np.array([float(line) for line in rf])
-    with open(gromacs_energy_f, 'r') as gf:
-        gf.readlines(gromacs_energy_f)
-    gf = np.array([float(line) for line in gf])
-    with open(work_f, 'r') as wf:
-        wf.readlines(work_f)
-    wf = np.array([float(line) for line in wf])
-    with open(react_coord_f, 'r') as rcf:
-        rcf.readlines(react_coord_f)
-    rcf = np.array([float(line) for line in rcf])
-    with open(react_coord_caver_f, 'r') as rccf:
-        rccf.readlines(react_coord_caver_f)
-    rccf = np.array([float(line) for line in rccf])
+    site_number_f = directory + '/site_number.txt'
+    radii_f = directory + '/radii.txt'
+    gromacs_energy_f = directory + '/gromacs_energy.txt'
+    work_f = directory + '/work.txt'
+    react_coord_f = directory + '/react_coord.txt'
+    react_coord_caver_f = directory + '/react_coord_caver.txt'
+    site_number = np.loadtxt(site_number_f)
+    radii = np.loadtxt(radii_f)
+    gromacs_energy = np.loadtxt(gromacs_energy_f)
+    work = np.loadtxt(work_f)
+    react_coord = np.loadtxt(react_coord_f)
+    react_coord_caver = np.loadtxt(react_coord_caver_f)
 
-    return rf, gf, rcf, rccf
+    return site_number, radii, gromacs_energy, work, react_coord, react_coord_caver
