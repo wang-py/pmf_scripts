@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # force constant in kJ/mol/A^2
     force_constant = float(sys.argv[3])
     if is_cached(path):
-        radii_vs_site, energies, react_coord, react_coord_caver = read_cached_files(path)
+        site_number, radii_vs_site, energies, work_vs_site, react_coord, react_coord_caver = read_cached_files(path)
     else:
         pos_files = sorted(glob(path + "/*_water.xvg"), key=sort_files_by_number)
         pos_files_caver = [file for file in pos_files if '.5' not in file]
@@ -32,5 +32,5 @@ if __name__ == '__main__':
     plot_radii_energy_vs_site(radii_vs_site, energies, react_coord, react_coord_caver, site_number)
     #force_vs_site = get_force_vs_site(tunnel_points, pos_files, force_constant)
     # caching the calculation results
-    output_plot_files(radii_vs_site, energies, work_vs_site, react_coord, react_coord_caver)
+    output_plot_files(site_number, radii_vs_site, energies, work_vs_site, react_coord, react_coord_caver)
     pass
