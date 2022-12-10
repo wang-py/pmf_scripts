@@ -59,6 +59,11 @@ def update_water_position(structure_pdb_data, water_i, new_water_pos):
 
     return structure_pdb_data
 
+def get_water_index(structure_pdb_data):
+    water_i = np.array([water.split()[1] for water in structure_pdb_data if 'OW' in water]).astype(int)[0] - 1
+
+    return water_i
+
 def dock_one_water(tunnel_point, structure_pdb_data):
     """
     function that takes the tunnel positions and docks water in the input structure
@@ -70,12 +75,12 @@ def dock_one_water(tunnel_point, structure_pdb_data):
     updated structure data with new water position
     """
     OW, HW1, HW2 = get_water_position(structure_pdb_data)
+    water_i = get_water_index(structure_pdb_data)
     # shift hydrogens to new positions as well
     delta_pos = tunnel_point - OW
     new_HW1 = HW1 + delta_pos 
     new_HW2 = HW2 + delta_pos 
     new_water_pos = np.array([tunnel_point, new_HW1, new_HW2])
-    water_i = 6507
 
     structure_pdb_data_new = update_water_position(structure_pdb_data, water_i, new_water_pos)
 
