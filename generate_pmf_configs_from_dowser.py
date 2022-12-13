@@ -12,7 +12,7 @@ def read_dowser_water_pdb(dowser_water_pdb):
         one_dowser = dowser_data[i:i+3]
         dowser_waters.append(one_dowser)
     dowser_waters = np.array(dowser_waters)
-    dowser_waters = dowser_data.astype(float)
+    dowser_waters = dowser_waters.astype(float)
     
     return dowser_waters
 
