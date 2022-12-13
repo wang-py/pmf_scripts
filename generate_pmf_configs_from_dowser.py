@@ -1,6 +1,7 @@
 # script that reads dowser water positions and puts water in the structure
 import sys
 import os
+from os.path import exists
 import numpy as np
 from generate_pmf_configs_from_tunnel import *
 
@@ -60,11 +61,21 @@ def generate_dowser_configs(dowser_waters, structure_pdb, prefix_filename):
     
     pass
 
+def output_dowser_energies(dowser_water_pdb):
+    with open(dowser_water_pdb, 'r') as dpdb:
+        dowser_energies = [line[60:67] for line in dpdb.readlines() if ' O ' in line]
+    with open("dowser_energies.txt", 'w') as DE:
+        DE.writelines(dowser_energies)
+    pass
+
 if __name__ == "__main__":
     input_structure = sys.argv[1]
     input_dowser = sys.argv[2]
     output_prefix = sys.argv[3]
     dowser_waters = read_dowser_water_pdb(input_dowser)
+    if not exists("dowser_energies.txt"):
+        output_dowser_energies(input_dowser)
+
     generate_dowser_configs(dowser_waters, input_structure, output_prefix)
 
     pass
