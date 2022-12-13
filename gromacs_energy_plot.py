@@ -27,10 +27,13 @@ def get_energy_vs_site(energy_files):
 
     return total_energies
 
-def plot_energy_vs_site(total_energies):
+def plot_energy_vs_site(total_energies, dowser_energies=None):
+
     sites = np.arange(total_energies.shape[0]) + 1
     cal_to_joules = 4.1868
-    plt.plot(sites, total_energies / cal_to_joules, 'o')
+    plt.plot(sites, total_energies / cal_to_joules, 'bo', label='gromacs')
+    if dowser_energies.any():
+        plt.plot(sites, dowser_energies, 'ro', label='dowser')
     plt.title("total energy vs site number")
     bulk_energy = -42 / cal_to_joules
     plt.axhline(bulk_energy, color='k', linestyle='--', label='energy of water in bulk %.1f kCal/mol'%bulk_energy)
@@ -40,10 +43,17 @@ def plot_energy_vs_site(total_energies):
     plt.show()
     pass
 
+def get_dowser_energies(dowser_energy_file):
+    with open(dowser_energy_file, 'r') as DE:
+        dowser_energies = [float(line) for line in DE.readlines()]
+    return np.array(dowser_energies)
+
 if __name__ == "__main__":
     input_path = sys.argv[1]
     energy_files = sorted(glob(input_path + "/*_energy.xvg"), key=os.path.getmtime)
+    dowser_energy_file = input_path + "/dowser_energies.txt"
     energies = get_energy_vs_site(energy_files)
-    plot_energy_vs_site(energies)
+    dowser_energies= get_dowser_energies(dowser_energy_file)
+    plot_energy_vs_site(energies, dowser_energies)
 
     pass
