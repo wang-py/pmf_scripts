@@ -29,11 +29,13 @@ def get_energy_vs_site(energy_files):
 
 def plot_energy_vs_site(total_energies):
     sites = np.arange(total_energies.shape[0]) + 1
-    plt.plot(sites, total_energies, 'o')
+    cal_to_joules = 4.1868
+    plt.plot(sites, total_energies / cal_to_joules, 'o')
     plt.title("total energy vs site number")
-    plt.axhline(-42, color='k', linestyle='--', label='energy of water in bulk 42 kJ/mol')
+    bulk_energy = -42 / cal_to_joules
+    plt.axhline(bulk_energy, color='k', linestyle='--', label='energy of water in bulk %.1f kCal/mol'%bulk_energy)
     plt.xlabel("site number")
-    plt.ylabel("energy (Coulomb + LJ) [kJ/mol]")
+    plt.ylabel("energy (Coulomb + LJ) [kCal/mol]")
     plt.legend()
     plt.show()
     pass
