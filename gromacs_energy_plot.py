@@ -37,7 +37,9 @@ def get_energy_vs_site(energy_files):
 
 def plot_energy_vs_site(total_energies, sites, dowser_energies=None):
     cal_to_joules = 4.1868
+    fig, ax = plt.subplots()
     plt.plot(sites, total_energies / cal_to_joules, 'bo', label='gromacs')
+    ax.set_xticks(sites)
     if dowser_energies.any():
         plt.plot(sites, dowser_energies, 'ro', label='dowser')
     plt.title("total energy vs site number")
