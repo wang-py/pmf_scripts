@@ -6,11 +6,14 @@
 # MDP file
 MDP=water_energy.mdp
 
+# Experiment folder
+EXP_FOLDER=~/SAMSUNG_SSD/ComplexI/LipolyticaQ/water_in_complexI/chain_JKAHN/
+
 # Topology file
-TOPOL=../topology/charged/lipolytica_JKAHN_ions_SOL.top
+TOPOL=$EXP_FOLDER/topology/charged/lipolytica_JKAHN_ions_SOL.top
 
 # Index file
-INDEX=../topology/charged/PMF_index.ndx
+INDEX=$EXP_FOLDER/topology/charged/PMF_index.ndx
 
 # MD folder
 MD_DIR=$1
