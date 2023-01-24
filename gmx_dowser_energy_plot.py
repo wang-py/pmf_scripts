@@ -1,5 +1,6 @@
 from dowser_hitrate_functions import *
 from gromacs_energy_plot import *
+
 if __name__ == "__main__":
     input_path = sys.argv[1]
     dowser_water_pdb = sys.argv[2]
@@ -13,4 +14,4 @@ if __name__ == "__main__":
     exp_water_arr = read_exp_water(exp_water_pdb)
     threshold = 1.4
     dowser_hit_stats = get_hit_stats_dowser(exp_water_arr, dowser_water_arr, threshold)
-    plot_energy_vs_site(energies, sites, dowser_energies)
+    plot_gmx_dowser_energy_vs_site(energies, sites, dowser_energies, dowser_hit_stats)

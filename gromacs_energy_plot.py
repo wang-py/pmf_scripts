@@ -51,6 +51,21 @@ def plot_energy_vs_site(total_energies, sites, dowser_energies=None):
     plt.show()
     pass
 
+def plot_gmx_dowser_energy_vs_site(total_energies, sites, dowser_energies, dowser_hit_stats):
+    cal_to_joules = 4.1868
+    fig, ax = plt.subplots()
+    plt.plot(sites, total_energies / cal_to_joules, 'bo', label='gromacs')
+    ax.set_xticks(sites)
+    plt.plot(sites, dowser_energies, 'ro', label='dowser')
+    plt.title("total energy vs site number")
+    bulk_energy = -42 / cal_to_joules
+    plt.axhline(bulk_energy, color='k', linestyle='--', label='energy of water in bulk %.1f kCal/mol'%bulk_energy)
+    plt.xlabel("site number")
+    plt.ylabel("energy (Coulomb + LJ) [kCal/mol]")
+    plt.legend()
+    plt.show()
+    pass
+
 def get_dowser_energies(dowser_energy_file):
     with open(dowser_energy_file, 'r') as DE:
         dowser_energies = [float(line) for line in DE.readlines()]
