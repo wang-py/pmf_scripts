@@ -16,12 +16,12 @@ def dowser_water_pruning(dowser_water_pdb):
     """
     with open(dowser_water_pdb, 'r') as dwp:
         data = dwp.readlines()
-        data = np.array([line[32:] for line in data if ' O ' in line]).astype(str)
+        data = np.array([line[32:66] for line in data if ' O ' in line]).astype(str)
         # get rid of duplicates
         data = np.unique(data)
     
     dowser_water_xyz = np.array([line[0:23].split() for line in data]).astype(float)
-    dowser_water_energy = np.array([line[28:-2] for line in data]).astype(float)
+    dowser_water_energy = np.array([line[28:] for line in data]).astype(float)
     dowser_water_arr = []
     for i in range(len(dowser_water_energy)):
         dowser_water_arr.append(np.append(dowser_water_xyz[i], dowser_water_energy[i]))
@@ -50,16 +50,18 @@ def read_exp_water(exp_water_pdb):
     
     return exp_water_arr
 
-def is_hit_dowser(one_dowser_water, exp_water, distance_threshold):
-    distance = calculate_distance(one_dowser_water, exp_water[:, 0:3])
+def dowser_hit_index(one_dowser_water, exp_water, distance_threshold):
+    distance = calculate_distance(exp_water[:, 0:3], one_dowser_water[0:3])
     hit = np.where(distance < distance_threshold)[0]
-    return hit.any()
+    return hit
 
 def get_hit_stats_dowser(exp_water, dowser_water, distance_threshold):
     hit_array = []
     for one_dowser in dowser_water:
-        is_hit = is_hit_dowser(one_dowser, exp_water, distance_threshold)
-        hit_array.append(is_hit_dowser)
+        hit_exp_water_index = dowser_hit_index(one_dowser, exp_water, distance_threshold)
+        exp_water = np.delete(exp_water, hit_exp_water_index, axis=0)
+        is_hit = hit_exp_water_index.any()
+        hit_array.append(is_hit)
     return np.array(hit_array)
 
 def get_hit_rate(exp_water, dowser_water, distance_threshold):
