@@ -56,7 +56,10 @@ def plot_gmx_dowser_energy_vs_site(total_energies, sites, dowser_energies, dowse
     fig, ax = plt.subplots()
     plt.plot(sites, total_energies / cal_to_joules, 'bo', label='gromacs')
     ax.set_xticks(sites)
-    plt.plot(sites, dowser_energies, 'ro', label='dowser')
+    dowser_hits = sites[dowser_hit_stats].astype(int)
+    overpredictions = sites[~dowser_hit_stats].astype(int)
+    plt.scatter(dowser_hits, dowser_energies[dowser_hits-1], marker='o', label='dowser hits', color='green')
+    plt.scatter(overpredictions, dowser_energies[overpredictions-1], marker='o', label='dowser overpredictions', color='orange')
     plt.title("total energy vs site number")
     bulk_energy = -42 / cal_to_joules
     plt.axhline(bulk_energy, color='k', linestyle='--', label='energy of water in bulk %.1f kCal/mol'%bulk_energy)
