@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from glob import glob
 import os
 import sys
+import re
 
 def get_energy_from_xvg(input_xvg):
     with open(input_xvg, 'r') as xvg:
@@ -14,7 +15,9 @@ def get_energy_from_xvg(input_xvg):
 
 def get_site_number_from_energy_file(energy_file):
     filename = os.path.basename(energy_file)
-    site_number = float(filename.split('_')[5])
+    sn = re.findall('\_[0-9]\_', filename)
+    site_number = float(sn[0][1])
+    #site_number = float(filename.split('_')[5])
 
     return site_number
     
@@ -38,10 +41,10 @@ def get_energy_vs_site(energy_files):
 def plot_energy_vs_site(total_energies, sites, dowser_energies=None):
     cal_to_joules = 4.1868
     fig, ax = plt.subplots()
-    plt.plot(sites, total_energies / cal_to_joules, 'bo', label='gromacs')
+    plt.plot(sites, total_energies / cal_to_joules, 'bo', label='gromacs', markersize=10)
     ax.set_xticks(sites)
     if dowser_energies.any():
-        plt.plot(sites, dowser_energies, 'ro', label='dowser')
+        plt.plot(sites, dowser_energies, 'ro', label='dowser', markersize=10)
     plt.title("total energy vs site number")
     bulk_energy = -42 / cal_to_joules
     plt.axhline(bulk_energy, color='k', linestyle='--', label='energy of water in bulk %.1f kCal/mol'%bulk_energy)
