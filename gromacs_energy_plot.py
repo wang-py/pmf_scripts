@@ -15,8 +15,10 @@ def get_energy_from_xvg(input_xvg):
 
 def get_site_number_from_energy_file(energy_file):
     filename = os.path.basename(energy_file)
-    sn = re.findall('\_[0-9]\_', filename)
-    site_number = float(sn[0][1])
+    sn = re.findall('\_\d+\_', filename)
+    sn = str(sn[0])
+    sn = sn.strip('_')
+    site_number = float(sn)
     #site_number = float(filename.split('_')[5])
 
     return site_number
