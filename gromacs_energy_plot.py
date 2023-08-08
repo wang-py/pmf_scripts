@@ -42,17 +42,20 @@ def get_energy_vs_site(energy_files):
 
 def plot_energy_vs_site(total_energies, sites, dowser_energies=None):
     cal_to_joules = 4.1868
-    fig, ax = plt.subplots()
-    plt.plot(sites, total_energies / cal_to_joules, 'bo', label='gromacs', markersize=10)
+    label_fontsize=16
+    fig, ax = plt.subplots(figsize=(11,7))
+    plt.plot(sites, total_energies / cal_to_joules, 'b^', label='gromacs', markersize=10)
     ax.set_xticks(sites)
+    ax.tick_params(axis='x', labelsize=label_fontsize)
+    ax.tick_params(axis='y', labelsize=label_fontsize)
     if dowser_energies.any():
-        plt.plot(sites, dowser_energies, 'ro', label='dowser', markersize=10)
-    plt.title("total energy vs site number")
+        plt.plot(sites, dowser_energies, 'rv', label='dowser', markersize=10)
+    plt.title("total energy vs site number", fontsize=label_fontsize)
     bulk_energy = -42 / cal_to_joules
     plt.axhline(bulk_energy, color='k', linestyle='--', label='energy of water in bulk %.1f kCal/mol'%bulk_energy)
-    plt.xlabel("site number")
-    plt.ylabel("energy (Coulomb + LJ) [kCal/mol]")
-    plt.legend()
+    plt.xlabel("site number", fontsize=label_fontsize)
+    plt.ylabel("energy (Coulomb + LJ) [kCal/mol]", fontsize=label_fontsize)
+    plt.legend(loc="upper left")
     plt.show()
     pass
 
