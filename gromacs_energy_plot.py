@@ -44,7 +44,14 @@ def plot_energy_vs_site(total_energies, sites, output_filename, dowser_energies=
     cal_to_joules = 4.1868
     label_fontsize=16
     fig, ax = plt.subplots(figsize=(14,7))
-    plt.plot(sites, total_energies / cal_to_joules, 'b^', label='gromacs', markersize=10)
+    total_energies_in_cal = total_energies / cal_to_joules
+    plt.plot(sites, total_energies_in_cal, 'b^', label='gromacs', markersize=10)
+    sites_and_gmx_energy = np.zeros((len(sites),2))
+    for i in range(len(sites)):
+        sites_and_gmx_energy[i] = [int(sites[i]), total_energies_in_cal[i]]
+    # printing energy values
+    print(sites_and_gmx_energy)
+    print(np.array([x for x in sites_and_gmx_energy if x[1] > -2.5]))
     ax.set_xticks(sites)
     ax.tick_params(axis='x', labelsize=label_fontsize)
     ax.tick_params(axis='y', labelsize=label_fontsize)
@@ -56,7 +63,7 @@ def plot_energy_vs_site(total_energies, sites, output_filename, dowser_energies=
     plt.xlabel("site number", fontsize=label_fontsize)
     plt.ylabel("energy (Coulomb + LJ) [kCal/mol]", fontsize=label_fontsize)
     plt.legend(loc="best")
-    plt.savefig(output_fig_filename+".png", dpi=200)
+    plt.savefig(output_filename+".png", dpi=200)
     plt.show()
     pass
 
