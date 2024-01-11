@@ -33,8 +33,8 @@ def get_energy_vs_site(energy_files):
     for i in range(num_of_pts):
         energy = get_energy_from_xvg(energy_files[i])
         site_number[i] = get_site_number_from_energy_file(energy_files[i])
-        coulomb = energy[:, 0]
-        LJ = energy[:, 1]
+        coulomb = energy[:, [0,2]]
+        LJ = energy[:, [1,3]]
         avg_total_energy = np.mean(coulomb + LJ)
         total_energies[i] = avg_total_energy
 
@@ -50,8 +50,11 @@ def plot_energy_vs_site(total_energies, sites, output_filename, dowser_energies=
     for i in range(len(sites)):
         sites_and_gmx_energy[i] = [int(sites[i]), total_energies_in_cal[i]]
     # printing energy values
+    print("Sites and gromacs energies: ")
     print(sites_and_gmx_energy)
-    print(np.array([x for x in sites_and_gmx_energy if x[1] > -2.5]))
+    #energy_threshold = -7 #kCal/mol
+    #print(f"water with energies higher than {energy_threshold} kCal/mol:")
+    #print(np.array([x for x in sites_and_gmx_energy if x[1] > energy_threshold]))
     ax.set_xticks(sites)
     ax.tick_params(axis='x', labelsize=label_fontsize)
     ax.tick_params(axis='y', labelsize=label_fontsize)
@@ -61,7 +64,7 @@ def plot_energy_vs_site(total_energies, sites, output_filename, dowser_energies=
     bulk_energy = -42 / cal_to_joules
     plt.axhline(bulk_energy, color='k', linestyle='--', label='energy of water in bulk %.1f kCal/mol'%bulk_energy)
     plt.xlabel("site number", fontsize=label_fontsize)
-    plt.ylabel("energy (Coulomb + LJ) [kCal/mol]", fontsize=label_fontsize)
+    plt.ylabel("energy [kCal/mol]", fontsize=label_fontsize)
     plt.legend(loc="best")
     plt.savefig(output_filename+".png", dpi=200)
     plt.show()
