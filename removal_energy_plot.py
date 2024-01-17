@@ -9,11 +9,25 @@ def get_initial_cluster_energy(cluster_energy_xvg):
     #LJ = energy[:, 4]
     #avg_total_energy = np.mean(coulomb)
     #avg_total_energy = np.mean(LJ)
-    coulomb = energy[:, [0,2]]
-    LJ = energy[:, [1,3]]
-    avg_total_energy = np.mean(coulomb + LJ)
-
+    #coulomb = energy[:, [0,2]]
+    #LJ = energy[:, [1,3]]
+    avg_total_energy = np.mean(np.sum(energy, axis=1))
     return avg_total_energy
+
+def get_minus_one_energy_vs_site(energy_files):
+    """
+    function that gets individual average energies from input xvgs
+    """
+    num_of_pts = len(energy_files)
+    total_energies = np.zeros(num_of_pts)
+    site_number = np.zeros(num_of_pts)
+    for i in range(num_of_pts):
+        energy = get_energy_from_xvg(energy_files[i])
+        site_number[i] = get_site_number_from_energy_file(energy_files[i])
+        avg_total_energy = np.mean(np.sum(energy, axis=1))
+        total_energies[i] = avg_total_energy
+
+    return total_energies, site_number
 
 def plot_removal_energy_vs_site(removal_energies, sites, output_filename, dowser_energies):
     cal_to_joules = 4.1868
@@ -53,10 +67,10 @@ if __name__ == '__main__':
     else:
         output_fig_filename = "output_fig"
     minus_one_energy_files = sorted(glob(minus_one_energy_path + "/*_energy.xvg"), key=os.path.getmtime)
-    dowser_energy_file = input_path + "/dowser_energies.txt"
-    minus_one_energies, sites = get_energy_vs_site(minus_one_energy_files)
+    dowser_energy_file = "dowser_energies.txt"
+    minus_one_energies, sites = get_minus_one_energy_vs_site(minus_one_energy_files)
     initial_cluster_energy = get_initial_cluster_energy(cluster_energy_xvg)
-    removal_energies = minus_one_energies - initial_cluster_energy
+    removal_energies = initial_cluster_energy - minus_one_energies
     dowser_energies= get_dowser_energies(dowser_energy_file)
     plot_removal_energy_vs_site(removal_energies, sites, output_fig_filename, dowser_energies)
     pass
