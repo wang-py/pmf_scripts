@@ -33,6 +33,10 @@ def get_energy_vs_site(energy_files):
     for i in range(num_of_pts):
         energy = get_energy_from_xvg(energy_files[i])
         site_number[i] = get_site_number_from_energy_file(energy_files[i])
+        #coulomb = energy[:, 3]
+        #LJ = energy[:, 4]
+        #avg_total_energy = np.mean(coulomb)
+        #avg_total_energy = np.mean(LJ)
         coulomb = energy[:, [0,2]]
         LJ = energy[:, [1,3]]
         avg_total_energy = np.mean(coulomb + LJ)
@@ -93,6 +97,12 @@ def get_dowser_energies(dowser_energy_file):
         dowser_energies = [float(line) for line in DE.readlines()]
     return np.array(dowser_energies)
 
+def write_gmx_energies_to_file(energies):
+    with open("gmx_energies.txt", 'w') as gmx_E:
+        for energy in energies:
+            gmx_E.write(energy.astype(str)+'\n')
+    pass
+
 if __name__ == "__main__":
     input_path = sys.argv[1]
     if len(sys.argv) > 2:
@@ -103,6 +113,7 @@ if __name__ == "__main__":
     dowser_energy_file = input_path + "/dowser_energies.txt"
     energies, sites = get_energy_vs_site(energy_files)
     dowser_energies= get_dowser_energies(dowser_energy_file)
+    write_gmx_energies_to_file(energies)
     plot_energy_vs_site(energies, sites, output_fig_filename, dowser_energies)
 
     pass
