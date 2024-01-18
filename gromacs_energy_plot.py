@@ -37,8 +37,8 @@ def get_energy_vs_site(energy_files):
         #LJ = energy[:, 4]
         #avg_total_energy = np.mean(coulomb)
         #avg_total_energy = np.mean(LJ)
-        coulomb = energy[:, [0,2]]
-        LJ = energy[:, [1,3]]
+        coulomb = energy[:, 0] + energy[:,2]
+        LJ = energy[:,1] + energy[:,3]
         avg_total_energy = np.mean(coulomb + LJ)
         total_energies[i] = avg_total_energy
 
@@ -74,6 +74,36 @@ def plot_energy_vs_site(total_energies, sites, output_filename, dowser_energies=
     plt.show()
     pass
 
+def plot_gmx_energies_vs_site(total_energies1, total_energies2, sites, output_filename):
+    cal_to_joules = 4.1868
+    label_fontsize=16
+    fig, ax = plt.subplots(figsize=(14,7))
+    total_energies1_in_cal = total_energies1 / cal_to_joules
+    plt.plot(sites, total_energies1_in_cal, 'r^', label='gromacs k=5 kJ/mol', markersize=10)
+    plt.plot(sites, total_energies2, 'bv', label='gromacs k=75 kJ/mol', markersize=10)
+    sites_and_gmx_energy = np.zeros((len(sites),2))
+    for i in range(len(sites)):
+        sites_and_gmx_energy[i] = [int(sites[i]), total_energies1_in_cal[i]]
+    # printing energy values
+    print("Sites and gromacs energies: ")
+    print(sites_and_gmx_energy)
+    #energy_threshold = -7 #kCal/mol
+    #print(f"water with energies higher than {energy_threshold} kCal/mol:")
+    #print(np.array([x for x in sites_and_gmx_energy if x[1] > energy_threshold]))
+    ax.set_xticks(sites)
+    ax.tick_params(axis='x', labelsize=label_fontsize)
+    ax.tick_params(axis='y', labelsize=label_fontsize)
+    #plt.title("total energy vs site number", fontsize=label_fontsize)
+    bulk_energy = -42 / cal_to_joules
+    plt.axhline(bulk_energy, color='k', linestyle='--', label='energy of water in bulk %.1f kCal/mol'%bulk_energy)
+    plt.xlabel("site number", fontsize=label_fontsize)
+    plt.ylabel("energy [kCal/mol]", fontsize=label_fontsize)
+    plt.legend(loc="best")
+    plt.savefig(output_filename+".png", dpi=200)
+    plt.show()
+    pass
+
+
 def plot_gmx_dowser_energy_vs_site(total_energies, sites, dowser_energies, dowser_hit_stats):
     cal_to_joules = 4.1868
     fig, ax = plt.subplots()
@@ -97,6 +127,12 @@ def get_dowser_energies(dowser_energy_file):
         dowser_energies = [float(line) for line in DE.readlines()]
     return np.array(dowser_energies)
 
+def get_gmx_energies(gmx_energy_file):
+    cal_to_joules = 4.1868
+    with open(gmx_energy_file, 'r') as DE:
+        gmx_energies = [float(line) / cal_to_joules for line in DE.readlines()] 
+    return np.array(gmx_energies)
+
 def write_gmx_energies_to_file(energies):
     with open("gmx_energies.txt", 'w') as gmx_E:
         for energy in energies:
@@ -113,7 +149,9 @@ if __name__ == "__main__":
     dowser_energy_file = input_path + "/dowser_energies.txt"
     energies, sites = get_energy_vs_site(energy_files)
     dowser_energies= get_dowser_energies(dowser_energy_file)
-    write_gmx_energies_to_file(energies)
+    gmx_energies = get_gmx_energies('gmx_energies_strong_restraint.txt')
+    #write_gmx_energies_to_file(energies)
+    #plot_gmx_energies_vs_site(energies, gmx_energies, sites, output_fig_filename)
     plot_energy_vs_site(energies, sites, output_fig_filename, dowser_energies)
 
     pass
