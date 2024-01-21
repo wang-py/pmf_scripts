@@ -29,13 +29,19 @@ def get_minus_one_energy_vs_site(energy_files):
 
     return total_energies, site_number
 
-def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_filename, dowser_energies):
+def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_filename, std_gmx_energies, dowser_energies):
     cal_to_joules = 4.1868
     label_fontsize=16
     fig, ax = plt.subplots(figsize=(14,7))
+
     removal_energies_in_cal = removal_energies / cal_to_joules
+    gmx_energies /= cal_to_joules
+    std_gmx_energies /= cal_to_joules
+
     plt.plot(sites, removal_energies_in_cal, 'g^', label='removal', markersize=10)
     plt.plot(sites, gmx_energies, 'b^', label='gromacs potential', markersize=10)
+    plt.errorbar(sites, gmx_energies, std_gmx_energies, capsize=10, linestyle='none', fmt='b', label='std gromacs')
+
     sites_and_removal_energy = np.zeros((len(sites),2))
     for i in range(len(sites)):
         sites_and_removal_energy[i] = [int(sites[i]), removal_energies_in_cal[i]]
@@ -70,11 +76,11 @@ if __name__ == '__main__':
         output_fig_filename = "output_fig"
     minus_one_energy_files = sorted(glob(minus_one_energy_path + "/*_energy.xvg"), key=os.path.getmtime)
     dowser_energy_file = "dowser_energies.txt"
-    minus_one_energies, std_minus_one_energies, sites = get_minus_one_energy_vs_site(minus_one_energy_files)
+    minus_one_energies, sites = get_minus_one_energy_vs_site(minus_one_energy_files)
     initial_cluster_energy = get_initial_cluster_energy(cluster_energy_xvg)
     print(f"the initial cluster energy is {initial_cluster_energy} kJ/mol")
     removal_energies = initial_cluster_energy - minus_one_energies
     dowser_energies= get_dowser_energies(dowser_energy_file)
-    gmx_potential_energy = get_gmx_energies(gmx_potential_energy_file)
-    plot_removal_energy_vs_site(removal_energies, gmx_potential_energy, sites, output_fig_filename, std_minus_one_energies, dowser_energies)
+    gmx_potential_energy, gmx_std = get_gmx_energies(gmx_potential_energy_file)
+    plot_removal_energy_vs_site(removal_energies, gmx_potential_energy, sites, output_fig_filename, gmx_std, dowser_energies)
     pass

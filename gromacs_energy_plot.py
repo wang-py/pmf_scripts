@@ -134,10 +134,11 @@ def get_dowser_energies(dowser_energy_file):
     return np.array(dowser_energies)
 
 def get_gmx_energies(gmx_energy_file):
-    cal_to_joules = 4.1868
     with open(gmx_energy_file, 'r') as DE:
-        gmx_energies = [float(line) / cal_to_joules for line in DE.readlines()] 
-    return np.array(gmx_energies)
+        data = np.array([line.split() for line in DE.readlines()])
+        gmx_energies = data[:, 0]
+        std_gmx_energies = data[:, 1]
+    return gmx_energies.astype(float), std_gmx_energies.astype(float)
 
 def write_gmx_energies_to_file(energies, std_energies):
     with open("gmx_energies.txt", 'w') as gmx_E:
