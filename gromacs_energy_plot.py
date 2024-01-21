@@ -26,9 +26,11 @@ def get_site_number_from_energy_file(energy_file):
 def get_energy_vs_site(energy_files):
     """
     function that gets individual average energies from input xvgs
+    output is in kJ/mol
     """
     num_of_pts = len(energy_files)
     total_energies = np.zeros(num_of_pts)
+    std_energies = np.zeros(num_of_pts)
     site_number = np.zeros(num_of_pts)
     for i in range(num_of_pts):
         energy = get_energy_from_xvg(energy_files[i])
@@ -40,16 +42,20 @@ def get_energy_vs_site(energy_files):
         coulomb = energy[:, 0] + energy[:,2]
         LJ = energy[:,1] + energy[:,3]
         avg_total_energy = np.mean(coulomb + LJ)
+        std_energies[i] = np.std(LJ + coulomb)
         total_energies[i] = avg_total_energy
 
-    return total_energies, site_number
+    return total_energies, std_energies, site_number
 
-def plot_energy_vs_site(total_energies, sites, output_filename, dowser_energies=None):
+def plot_energy_vs_site(total_energies, sites, output_filename, std_energies=None, dowser_energies=None):
     cal_to_joules = 4.1868
     label_fontsize=16
     fig, ax = plt.subplots(figsize=(14,7))
     total_energies_in_cal = total_energies / cal_to_joules
     plt.plot(sites, total_energies_in_cal, 'b^', label='gromacs', markersize=10)
+    if std_energies.any():
+        std_energies /= cal_to_joules #convert to kCal
+        plt.errorbar(sites, total_energies_in_cal, std_energies, fmt='b', capsize=10, linestyle='', label='std gromacs')
     sites_and_gmx_energy = np.zeros((len(sites),2))
     for i in range(len(sites)):
         sites_and_gmx_energy[i] = [int(sites[i]), total_energies_in_cal[i]]
@@ -133,10 +139,10 @@ def get_gmx_energies(gmx_energy_file):
         gmx_energies = [float(line) / cal_to_joules for line in DE.readlines()] 
     return np.array(gmx_energies)
 
-def write_gmx_energies_to_file(energies):
+def write_gmx_energies_to_file(energies, std_energies):
     with open("gmx_energies.txt", 'w') as gmx_E:
-        for energy in energies:
-            gmx_E.write(energy.astype(str)+'\n')
+        for i in range(energies.shape[0]):
+            gmx_E.write(energies[i].astype(str) + ' ' + std_energies[i].astype(str)+'\n')
     pass
 
 if __name__ == "__main__":
@@ -147,11 +153,11 @@ if __name__ == "__main__":
         output_fig_filename = "output_fig"
     energy_files = sorted(glob(input_path + "/*_energy.xvg"), key=os.path.getmtime)
     dowser_energy_file = input_path + "/dowser_energies.txt"
-    energies, sites = get_energy_vs_site(energy_files)
+    energies, std_energies, sites = get_energy_vs_site(energy_files)
     dowser_energies= get_dowser_energies(dowser_energy_file)
-    gmx_energies = get_gmx_energies('gmx_energies_strong_restraint.txt')
-    #write_gmx_energies_to_file(energies)
+    #gmx_energies = get_gmx_energies('gmx_energies_strong_restraint.txt')
+    write_gmx_energies_to_file(energies, std_energies)
     #plot_gmx_energies_vs_site(energies, gmx_energies, sites, output_fig_filename)
-    plot_energy_vs_site(energies, sites, output_fig_filename, dowser_energies)
+    plot_energy_vs_site(energies, sites, output_fig_filename, std_energies, dowser_energies)
 
     pass
