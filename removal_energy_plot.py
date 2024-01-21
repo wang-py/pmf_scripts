@@ -46,22 +46,24 @@ def get_minus_one_energy_vs_site(energy_files):
 
     return total_energies, site_number
 
-def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_filename, std_gmx_energies, dowser_energies):
+def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_filename, std_removal_energies, std_gmx_energies, dowser_energies):
     cal_to_joules = 4.1868
     label_fontsize=16
     fig, ax = plt.subplots(figsize=(14,7))
 
-    removal_energies_in_cal = removal_energies / cal_to_joules
+    removal_energies = removal_energies / cal_to_joules
+    std_removal_energies /= cal_to_joules
     gmx_energies /= cal_to_joules
     std_gmx_energies /= cal_to_joules
 
-    plt.plot(sites, removal_energies_in_cal, 'g^', label='removal', markersize=10)
+    plt.plot(sites, removal_energies, 'g^', label='removal', markersize=10)
     plt.plot(sites, gmx_energies, 'b^', label='gromacs potential', markersize=10)
     plt.errorbar(sites, gmx_energies, std_gmx_energies, capsize=10, linestyle='none', fmt='b', label='std gromacs')
+    plt.errorbar(sites, removal_energies, std_removal_energies, capsize=10, linestyle='none', fmt='g', label='std removal')
 
     sites_and_removal_energy = np.zeros((len(sites),2))
     for i in range(len(sites)):
-        sites_and_removal_energy[i] = [int(sites[i]), removal_energies_in_cal[i]]
+        sites_and_removal_energy[i] = [int(sites[i]), removal_energies[i]]
     # printing energy values
     print("Sites and removal energies: ")
     print(sites_and_removal_energy)
@@ -98,5 +100,5 @@ if __name__ == '__main__':
     removal_energies, std_removal_energies, sites = get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files)
     dowser_energies= get_dowser_energies(dowser_energy_file)
     gmx_potential_energy, gmx_std = get_gmx_energies(gmx_potential_energy_file)
-    plot_removal_energy_vs_site(removal_energies, gmx_potential_energy, sites, output_fig_filename, gmx_std, dowser_energies)
+    plot_removal_energy_vs_site(removal_energies, gmx_potential_energy, sites, output_fig_filename, std_removal_energies, gmx_std, dowser_energies)
     pass
