@@ -29,21 +29,22 @@ def get_minus_one_energy_vs_site(energy_files):
 
     return total_energies, site_number
 
-def plot_removal_energy_vs_site(removal_energies, sites, output_filename, dowser_energies):
+def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_filename, dowser_energies):
     cal_to_joules = 4.1868
     label_fontsize=16
     fig, ax = plt.subplots(figsize=(14,7))
     removal_energies_in_cal = removal_energies / cal_to_joules
     plt.plot(sites, removal_energies_in_cal, 'g^', label='removal', markersize=10)
+    plt.plot(sites, gmx_energies, 'b^', label='gromacs potential', markersize=10)
     sites_and_removal_energy = np.zeros((len(sites),2))
     for i in range(len(sites)):
         sites_and_removal_energy[i] = [int(sites[i]), removal_energies_in_cal[i]]
     # printing energy values
     print("Sites and removal energies: ")
     print(sites_and_removal_energy)
-    #energy_threshold = -7 #kCal/mol
-    #print(f"water with energies higher than {energy_threshold} kCal/mol:")
-    #print(np.array([x for x in sites_and_removal_energy if x[1] > energy_threshold]))
+    energy_threshold = -10 #kCal/mol
+    print(f"water with energies higher than {energy_threshold} kCal/mol:")
+    print(np.array([x for x in sites_and_removal_energy if x[1] > energy_threshold]))
     ax.set_xticks(sites)
     ax.tick_params(axis='x', labelsize=label_fontsize)
     ax.tick_params(axis='y', labelsize=label_fontsize)
@@ -62,15 +63,18 @@ def plot_removal_energy_vs_site(removal_energies, sites, output_filename, dowser
 if __name__ == '__main__':
     cluster_energy_xvg = sys.argv[1]
     minus_one_energy_path = sys.argv[2]
-    if len(sys.argv) > 3:
-        output_fig_filename = sys.argv[3]
+    gmx_potential_energy_file = sys.argv[3]
+    if len(sys.argv) > 4:
+        output_fig_filename = sys.argv[4]
     else:
         output_fig_filename = "output_fig"
     minus_one_energy_files = sorted(glob(minus_one_energy_path + "/*_energy.xvg"), key=os.path.getmtime)
     dowser_energy_file = "dowser_energies.txt"
-    minus_one_energies, sites = get_minus_one_energy_vs_site(minus_one_energy_files)
+    minus_one_energies, std_minus_one_energies, sites = get_minus_one_energy_vs_site(minus_one_energy_files)
     initial_cluster_energy = get_initial_cluster_energy(cluster_energy_xvg)
+    print(f"the initial cluster energy is {initial_cluster_energy} kJ/mol")
     removal_energies = initial_cluster_energy - minus_one_energies
     dowser_energies= get_dowser_energies(dowser_energy_file)
-    plot_removal_energy_vs_site(removal_energies, sites, output_fig_filename, dowser_energies)
+    gmx_potential_energy = get_gmx_energies(gmx_potential_energy_file)
+    plot_removal_energy_vs_site(removal_energies, gmx_potential_energy, sites, output_fig_filename, std_minus_one_energies, dowser_energies)
     pass
