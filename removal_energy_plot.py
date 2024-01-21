@@ -14,6 +14,23 @@ def get_initial_cluster_energy(cluster_energy_xvg):
     avg_total_energy = np.mean(np.sum(energy, axis=1))
     return avg_total_energy
 
+def get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files):
+    num_of_pts = len(minus_one_energy_files)
+    removal_energies = np.zeros(num_of_pts)
+    std_removal_energies = np.zeros(num_of_pts)
+    site_number = np.zeros(num_of_pts)
+    cluster_energy = np.sum(get_energy_from_xvg(cluster_energy_xvg), axis=1)
+    for i in range(num_of_pts):
+        site_number[i] = get_site_number_from_energy_file(minus_one_energy_files[i])
+        minus_one_energy = np.sum(get_energy_from_xvg(minus_one_energy_files[i]), axis=1)
+        energy_diff = cluster_energy - minus_one_energy
+        removal_energy = np.mean(energy_diff)
+        std_removal_energy = np.std(energy_diff)
+        removal_energies[i] = removal_energy
+        std_removal_energies[i] = std_removal_energy
+
+    return removal_energies, std_removal_energies, site_number
+
 def get_minus_one_energy_vs_site(energy_files):
     """
     function that gets individual average energies from input xvgs
@@ -76,10 +93,9 @@ if __name__ == '__main__':
         output_fig_filename = "output_fig"
     minus_one_energy_files = sorted(glob(minus_one_energy_path + "/*_energy.xvg"), key=os.path.getmtime)
     dowser_energy_file = "dowser_energies.txt"
-    minus_one_energies, sites = get_minus_one_energy_vs_site(minus_one_energy_files)
     initial_cluster_energy = get_initial_cluster_energy(cluster_energy_xvg)
     print(f"the initial cluster energy is {initial_cluster_energy} kJ/mol")
-    removal_energies = initial_cluster_energy - minus_one_energies
+    removal_energies, std_removal_energies, sites = get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files)
     dowser_energies= get_dowser_energies(dowser_energy_file)
     gmx_potential_energy, gmx_std = get_gmx_energies(gmx_potential_energy_file)
     plot_removal_energy_vs_site(removal_energies, gmx_potential_energy, sites, output_fig_filename, gmx_std, dowser_energies)
