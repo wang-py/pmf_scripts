@@ -1,4 +1,48 @@
 from gromacs_energy_plot import *
+import matplotlib.colors as colors
+
+def plot_one_dist(ax, bins, this_xlabel, distribution, save = False):
+
+    # get standard deviation of the distribution's
+    distribution_std = np.std(distribution)
+    distribution_std_str = f"{distribution_std:.2f}"
+
+    # get mean of distribution
+    distribution_mean = np.mean(distribution)
+    distribution_mean_str = f"{distribution_mean:.2f}"
+
+    # plotting distribution distribution
+    #ax.set(title = 'Distribution of movement in one direction')
+    if this_xlabel:
+        ax.set(xlabel = this_xlabel + ' deviation from fixed point [kJ/mol]')
+    #ax.set(ylabel = 'Frequency')
+
+    # crystal structure line
+    ax.axvline(distribution_mean, color = 'k', linestyle = '--', \
+    label = 'mean = ' + distribution_mean_str + ' kJ/mol')
+
+    # standard deviation
+    ax.plot([], [], ' ', \
+    label = 'standard deviation = ' + distribution_std_str + ' kJ/mol')
+
+    # histogram with colors
+    N, bin_min, patches = ax.hist(distribution, bins, density = True)
+    fracs = N / N.max()
+    norm = colors.Normalize(fracs.min(), fracs.max())
+    for thisfrac, thispatch in zip(fracs, patches):
+        color = plt.cm.viridis(norm(thisfrac))
+        thispatch.set_facecolor(color)
+
+    # best fit line
+    y = ((1 / (np.sqrt(2 * np.pi) * distribution_std)) * \
+         np.exp(-0.5 * (1 / distribution_std * (bin_min - distribution_mean))**2))
+    ax.plot(bin_min, y, '-', color = 'r', label = 'best fit')
+
+    ax.legend(loc = 'best')
+    if save:
+        plt.savefig(this_xlabel+".png", dpi=200)
+    # return the plot object
+    return distribution_mean
 
 def get_initial_cluster_energy(cluster_energy_xvg):
     """
@@ -11,7 +55,10 @@ def get_initial_cluster_energy(cluster_energy_xvg):
     #avg_total_energy = np.mean(LJ)
     #coulomb = energy[:, [0,2]]
     #LJ = energy[:, [1,3]]
-    avg_total_energy = np.mean(np.sum(energy, axis=1))
+    total_energy = np.sum(energy, axis=1)
+    fig, ax = plt.subplots()
+    plot_one_dist(ax, 30, this_xlabel=None, distribution=total_energy, save=False)
+    avg_total_energy = np.mean(total_energy)
     return avg_total_energy
 
 def get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files):
@@ -20,18 +67,22 @@ def get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files):
     std_removal_energies = np.zeros(num_of_pts)
     site_number = np.zeros(num_of_pts)
     cluster_energy = np.mean(np.sum(get_energy_from_xvg(cluster_energy_xvg), axis=1))
+    #cluster_energy = np.sum(get_energy_from_xvg(cluster_energy_xvg), axis=1)
     var_cluster_energy = np.var(np.sum(get_energy_from_xvg(cluster_energy_xvg), axis=1))
     std_cluster_energy = np.std(np.sum(get_energy_from_xvg(cluster_energy_xvg), axis=1))
     print(f"variance and std of initial cluster energy: {var_cluster_energy}, {std_cluster_energy}")
     for i in range(num_of_pts):
         site_number[i] = get_site_number_from_energy_file(minus_one_energy_files[i])
         minus_one_energy = np.mean(np.sum(get_energy_from_xvg(minus_one_energy_files[i]), axis=1))
+        #minus_one_energy = np.sum(get_energy_from_xvg(minus_one_energy_files[i]), axis=1)
         var_minus_one_energy = np.var(np.sum(get_energy_from_xvg(minus_one_energy_files[i]), axis=1))
         std_minus_one_energy = np.std(np.sum(get_energy_from_xvg(minus_one_energy_files[i]), axis=1))
         print(f"variance and std of minus {i+1} cluster: {var_minus_one_energy}, {std_minus_one_energy}")
         energy_diff = cluster_energy - minus_one_energy
         removal_energy = energy_diff
+        #removal_energy = np.mean(energy_diff)
         std_removal_energy = np.sqrt(var_cluster_energy + var_minus_one_energy) # - 2*std_cluster_energy*std_minus_one_energy)
+        #std_removal_energy = np.std(energy_diff)
         removal_energies[i] = removal_energy
         std_removal_energies[i] = std_removal_energy
 
