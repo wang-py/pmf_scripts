@@ -19,13 +19,19 @@ def get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files):
     removal_energies = np.zeros(num_of_pts)
     std_removal_energies = np.zeros(num_of_pts)
     site_number = np.zeros(num_of_pts)
-    cluster_energy = np.sum(get_energy_from_xvg(cluster_energy_xvg), axis=1)
+    cluster_energy = np.mean(np.sum(get_energy_from_xvg(cluster_energy_xvg), axis=1))
+    var_cluster_energy = np.var(np.sum(get_energy_from_xvg(cluster_energy_xvg), axis=1))
+    std_cluster_energy = np.std(np.sum(get_energy_from_xvg(cluster_energy_xvg), axis=1))
+    print(f"variance and std of initial cluster energy: {var_cluster_energy}, {std_cluster_energy}")
     for i in range(num_of_pts):
         site_number[i] = get_site_number_from_energy_file(minus_one_energy_files[i])
-        minus_one_energy = np.sum(get_energy_from_xvg(minus_one_energy_files[i]), axis=1)
+        minus_one_energy = np.mean(np.sum(get_energy_from_xvg(minus_one_energy_files[i]), axis=1))
+        var_minus_one_energy = np.var(np.sum(get_energy_from_xvg(minus_one_energy_files[i]), axis=1))
+        std_minus_one_energy = np.std(np.sum(get_energy_from_xvg(minus_one_energy_files[i]), axis=1))
+        print(f"variance and std of minus {i+1} cluster: {var_minus_one_energy}, {std_minus_one_energy}")
         energy_diff = cluster_energy - minus_one_energy
-        removal_energy = np.mean(energy_diff)
-        std_removal_energy = np.std(energy_diff)
+        removal_energy = energy_diff
+        std_removal_energy = np.sqrt(var_cluster_energy + var_minus_one_energy) # - 2*std_cluster_energy*std_minus_one_energy)
         removal_energies[i] = removal_energy
         std_removal_energies[i] = std_removal_energy
 
@@ -49,7 +55,7 @@ def get_minus_one_energy_vs_site(energy_files):
 def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_filename, std_removal_energies, std_gmx_energies, dowser_energies):
     cal_to_joules = 4.1868
     label_fontsize=16
-    fig, ax = plt.subplots(figsize=(14,7))
+    fig, ax = plt.subplots(figsize=(14,9))
 
     removal_energies = removal_energies / cal_to_joules
     std_removal_energies /= cal_to_joules
