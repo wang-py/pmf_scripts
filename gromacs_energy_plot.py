@@ -153,7 +153,8 @@ if __name__ == "__main__":
     else:
         output_fig_filename = "output_fig"
     energy_files = sorted(glob(input_path + "/*_energy.xvg"), key=os.path.getmtime)
-    dowser_energy_file = input_path + "/dowser_energies.txt"
+    dowser_energy_file = "dowser_energies.txt"
+    #dowser_energy_file = input_path + "/dowser_energies.txt"
     energies, std_energies, sites = get_energy_vs_site(energy_files)
     dowser_energies= get_dowser_energies(dowser_energy_file)
     #gmx_energies = get_gmx_energies('gmx_energies_strong_restraint.txt')
