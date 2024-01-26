@@ -1,9 +1,9 @@
 from gromacs_energy_plot import *
 import matplotlib.colors as colors
 
-def plot_one_dist(ax, bins, this_xlabel, distribution, bestfit=True, save = False):
+def plot_one_dist(ax, bins, this_xlabel, distribution, bestfit = True, save = False):
     # font size
-    font_size=16
+    font_size=11
 
     # get standard deviation of the distribution's
     distribution_std = np.std(distribution)

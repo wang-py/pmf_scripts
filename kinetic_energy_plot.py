@@ -35,11 +35,12 @@ if __name__ == "__main__":
     rotational_energies = get_total_energy(rotational_xvgs)[1:]
     total_kinetic_energies = get_total_kinetic_energy(translational_energies, rotational_energies)[1:]
 
-    fig, ax = plt.subplots(3, 1,figsize=(9, 8))
+    fig, ax = plt.subplots(3, 1,figsize=(8, 10))
     bins = 40
-    plot_one_dist(ax[0], bins, "total translational energy", translational_energies, bestfit=False, save=False)
-    plot_one_dist(ax[1], bins, "total rotational energy", rotational_energies, bestfit=False, save=False)
-    plot_one_dist(ax[2], bins, "total kinetic energy", total_kinetic_energies, bestfit=False, save=False)
+    plot_one_dist(ax[0], bins, "total translational energy", translational_energies, bestfit=True, save=False)
+    plot_one_dist(ax[1], bins, "total rotational energy", rotational_energies, bestfit=True, save=False)
+    plot_one_dist(ax[2], bins, "total kinetic energy", total_kinetic_energies, bestfit=True, save=False)
+    plt.savefig(output_fig_filename + 'png', dpi=200)
     plt.show()
 
     pass
