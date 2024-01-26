@@ -1,7 +1,7 @@
 from gromacs_energy_plot import *
 import matplotlib.colors as colors
 
-def plot_one_dist(ax, bins, this_xlabel, distribution, save = False):
+def plot_one_dist(ax, bins, this_xlabel, distribution, bestfit=True, save = False):
 
     # get standard deviation of the distribution's
     distribution_std = np.std(distribution)
@@ -36,7 +36,8 @@ def plot_one_dist(ax, bins, this_xlabel, distribution, save = False):
     # best fit line
     y = ((1 / (np.sqrt(2 * np.pi) * distribution_std)) * \
          np.exp(-0.5 * (1 / distribution_std * (bin_min - distribution_mean))**2))
-    ax.plot(bin_min, y, '-', color = 'r', label = 'best fit')
+    if bestfit:
+        ax.plot(bin_min, y, '-', color = 'r', label = 'best fit')
 
     ax.legend(loc = 'best')
     if save:
@@ -57,13 +58,14 @@ def get_initial_cluster_energy(cluster_energy_xvg):
     #LJ = energy[:, [1,3]]
     total_energy = np.sum(energy, axis=1)
     fig, ax = plt.subplots()
-    plot_one_dist(ax, 30, this_xlabel=None, distribution=total_energy, save=False)
+    plot_one_dist(ax, 30, this_xlabel=None, distribution=total_energy, bestfit=True, save=False)
     avg_total_energy = np.mean(total_energy)
     return avg_total_energy
 
 def get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files):
     num_of_pts = len(minus_one_energy_files)
     removal_energies = np.zeros(num_of_pts)
+    std_removal = 12 #kJ/mol
     std_removal_energies = np.zeros(num_of_pts)
     site_number = np.zeros(num_of_pts)
     cluster_energy = np.mean(np.sum(get_energy_from_xvg(cluster_energy_xvg), axis=1))
@@ -84,7 +86,7 @@ def get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files):
         std_removal_energy = np.sqrt(var_cluster_energy + var_minus_one_energy) # - 2*std_cluster_energy*std_minus_one_energy)
         #std_removal_energy = np.std(energy_diff)
         removal_energies[i] = removal_energy
-        std_removal_energies[i] = std_removal_energy
+        std_removal_energies[i] = std_removal#std_removal_energy
 
     return removal_energies, std_removal_energies, site_number
 
@@ -106,7 +108,7 @@ def get_minus_one_energy_vs_site(energy_files):
 def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_filename, std_removal_energies, std_gmx_energies, dowser_energies):
     cal_to_joules = 4.1868
     label_fontsize=16
-    fig, ax = plt.subplots(figsize=(14,9))
+    fig, ax = plt.subplots(figsize=(18,9))
 
     removal_energies = removal_energies / cal_to_joules
     std_removal_energies /= cal_to_joules
@@ -115,8 +117,8 @@ def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_fi
 
     plt.plot(sites, removal_energies, 'g^', label='removal', markersize=10)
     plt.plot(sites, gmx_energies, 'b^', label='gromacs potential', markersize=10)
-    plt.errorbar(sites, gmx_energies, std_gmx_energies, capsize=10, linestyle='none', fmt='b', label='std gromacs')
-    plt.errorbar(sites, removal_energies, std_removal_energies, capsize=10, linestyle='none', fmt='g', label='std removal')
+    #plt.errorbar(sites, gmx_energies, std_gmx_energies, capsize=10, linestyle='none', fmt='b', label='std gromacs')
+    plt.errorbar(sites, removal_energies, std_removal_energies, capsize=10, linestyle='none', fmt='g')#, label='std removal')
 
     sites_and_removal_energy = np.zeros((len(sites),2))
     for i in range(len(sites)):
@@ -135,6 +137,7 @@ def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_fi
     #plt.title("total energy vs site number", fontsize=label_fontsize)
     bulk_energy = -42 / cal_to_joules
     plt.axhline(bulk_energy, color='k', linestyle='--', label='energy of water in bulk %.1f kCal/mol'%bulk_energy)
+    plt.axhline(-5, color='k', linestyle='--', label='-5 kCal/mol')
     plt.xlabel("site number", fontsize=label_fontsize)
     plt.ylabel("energy [kCal/mol]", fontsize=label_fontsize)
     plt.legend(loc="best")
