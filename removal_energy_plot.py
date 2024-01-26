@@ -2,6 +2,8 @@ from gromacs_energy_plot import *
 import matplotlib.colors as colors
 
 def plot_one_dist(ax, bins, this_xlabel, distribution, bestfit=True, save = False):
+    # font size
+    font_size=16
 
     # get standard deviation of the distribution's
     distribution_std = np.std(distribution)
@@ -14,8 +16,11 @@ def plot_one_dist(ax, bins, this_xlabel, distribution, bestfit=True, save = Fals
     # plotting distribution distribution
     #ax.set(title = 'Distribution of movement in one direction')
     if this_xlabel:
-        ax.set(xlabel = this_xlabel + ' deviation from fixed point [kJ/mol]')
+        ax.set(xlabel = this_xlabel + ' distribution [kJ/mol]')
+        ax.xaxis.label.set_size(font_size)
     #ax.set(ylabel = 'Frequency')
+    ax.tick_params(axis='x', labelsize=font_size)
+    ax.tick_params(axis='y', labelsize=font_size)
 
     # crystal structure line
     ax.axvline(distribution_mean, color = 'k', linestyle = '--', \
@@ -57,10 +62,8 @@ def get_initial_cluster_energy(cluster_energy_xvg):
     #coulomb = energy[:, [0,2]]
     #LJ = energy[:, [1,3]]
     total_energy = np.sum(energy, axis=1)
-    fig, ax = plt.subplots()
-    plot_one_dist(ax, 30, this_xlabel=None, distribution=total_energy, bestfit=True, save=False)
     avg_total_energy = np.mean(total_energy)
-    return avg_total_energy
+    return total_energy, avg_total_energy
 
 def get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files):
     num_of_pts = len(minus_one_energy_files)
@@ -155,8 +158,11 @@ if __name__ == '__main__':
         output_fig_filename = "output_fig"
     minus_one_energy_files = sorted(glob(minus_one_energy_path + "/*_energy.xvg"), key=os.path.getmtime)
     dowser_energy_file = "dowser_energies.txt"
-    initial_cluster_energy = get_initial_cluster_energy(cluster_energy_xvg)
-    print(f"the initial cluster energy is {initial_cluster_energy} kJ/mol")
+    initial_cluster_energies, avg_initial_cluster_energy = get_initial_cluster_energy(cluster_energy_xvg)
+    # plot distribution of potential energy
+    fig, ax = plt.subplots(figsize=(10, 8))
+    plot_one_dist(ax, 30, this_xlabel='cluster potential energy', distribution=initial_cluster_energies, bestfit=True, save=True)
+    print(f"the initial cluster energy is {avg_initial_cluster_energy} kJ/mol")
     removal_energies, std_removal_energies, sites = get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files)
     dowser_energies= get_dowser_energies(dowser_energy_file)
     gmx_potential_energy, gmx_std = get_gmx_energies(gmx_potential_energy_file)
