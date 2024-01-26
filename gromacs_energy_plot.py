@@ -55,7 +55,7 @@ def plot_energy_vs_site(total_energies, sites, output_filename, std_energies=Non
     plt.plot(sites, total_energies_in_cal, 'b^', label='gromacs', markersize=10)
     if std_energies.any():
         std_energies /= cal_to_joules #convert to kCal
-        plt.errorbar(sites, total_energies_in_cal, std_energies, fmt='b', capsize=10, linestyle='', label='std gromacs')
+        #plt.errorbar(sites, total_energies_in_cal, std_energies, fmt='b', capsize=10, linestyle='', label='std gromacs')
     sites_and_gmx_energy = np.zeros((len(sites),2))
     for i in range(len(sites)):
         sites_and_gmx_energy[i] = [int(sites[i]), total_energies_in_cal[i]]
