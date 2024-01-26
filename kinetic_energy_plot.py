@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import sys
 import os
 from glob import glob
-from removal_energy_plot import plot_one_dist
+from removal_energy_plot import plot_one_dist, get_initial_cluster_energy
 from gromacs_energy_plot import get_energy_from_xvg
 
 def get_total_kinetic_energy(translational, rotational):
@@ -24,23 +24,27 @@ def get_total_energy(energy_files):
 
 if __name__ == "__main__":
     input_path = sys.argv[1]
+    gmx_potential_energy_file = sys.argv[2]
     if len(sys.argv) > 2:
-        output_fig_filename = sys.argv[2]
+        output_fig_filename = sys.argv[3]
     else:
         output_fig_filename = "output_fig"
     translational_xvgs = sorted(glob(input_path + "/*trans_energy.xvg"), key=os.path.getmtime)
     rotational_xvgs = sorted(glob(input_path + "/*rot_energy.xvg"), key=os.path.getmtime)
 
-    translational_energies = get_total_energy(translational_xvgs)[1:]
-    rotational_energies = get_total_energy(rotational_xvgs)[1:]
-    total_kinetic_energies = get_total_kinetic_energy(translational_energies, rotational_energies)[1:]
+    total_potential_energies = get_initial_cluster_energy(gmx_potential_energy_file)[0]
+    translational_energies = get_total_energy(translational_xvgs)
+    rotational_energies = get_total_energy(rotational_xvgs)
+    total_kinetic_energies = get_total_kinetic_energy(translational_energies, rotational_energies)
+
+    total_energies = total_potential_energies + total_kinetic_energies[:, 0]
 
     fig, ax = plt.subplots(3, 1,figsize=(8, 10))
     bins = 40
-    plot_one_dist(ax[0], bins, "total translational energy", translational_energies, bestfit=True, save=False)
-    plot_one_dist(ax[1], bins, "total rotational energy", rotational_energies, bestfit=True, save=False)
-    plot_one_dist(ax[2], bins, "total kinetic energy", total_kinetic_energies, bestfit=True, save=False)
-    plt.savefig(output_fig_filename + 'png', dpi=200)
+    plot_one_dist(ax[0], bins, "total potential energy", total_potential_energies[1:], bestfit=True, save=False)
+    plot_one_dist(ax[1], bins, "total kinetic energy", total_kinetic_energies[1:], bestfit=True, save=False)
+    plot_one_dist(ax[2], bins, "total energy", total_energies[1:], bestfit=True, save=False)
+    plt.savefig(output_fig_filename + '.png', dpi=200)
     plt.show()
 
     pass
