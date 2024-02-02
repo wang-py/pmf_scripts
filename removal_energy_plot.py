@@ -130,8 +130,9 @@ def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_fi
     print("Sites and removal energies: ")
     print(sites_and_removal_energy)
     energy_threshold = -10 #kCal/mol
-    print(f"water with energies higher than {energy_threshold} kCal/mol:")
-    print(np.array([x for x in sites_and_removal_energy if x[1] > energy_threshold]))
+    higher_energies = np.array([x for x in sites_and_removal_energy if x[1] > energy_threshold])
+    print(f"{len(higher_energies)} water with energies higher than {energy_threshold} kCal/mol:")
+    print(higher_energies)
     ax.set_xticks(sites)
     ax.tick_params(axis='x', labelsize=label_fontsize)
     ax.tick_params(axis='y', labelsize=label_fontsize)
