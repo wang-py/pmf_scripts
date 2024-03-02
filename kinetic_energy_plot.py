@@ -10,7 +10,7 @@ def get_total_kinetic_energy(translational, rotational):
     total_kinetic_energy = rotational + translational
     return total_kinetic_energy
 
-def get_cluster_potential_energy(energy_file):
+def get_potential_energy(energy_file):
     """
     function that gets individual average energies from input xvgs
     output is in kJ/mol
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     translational_xvgs = sorted(glob(input_path + "/*trans_energy.xvg"), key=os.path.getmtime)
     rotational_xvgs = sorted(glob(input_path + "/*rot_energy.xvg"), key=os.path.getmtime)
 
-    total_potential_energies = get_cluster_potential_energy(gmx_potential_energy_file)
+    total_potential_energies = get_potential_energy(gmx_potential_energy_file)
     translational_energies = get_total_energy(translational_xvgs)
     rotational_energies = get_total_energy(rotational_xvgs)
     total_kinetic_energies = get_total_kinetic_energy(translational_energies, rotational_energies)
@@ -57,9 +57,10 @@ if __name__ == "__main__":
 
     fig, ax = plt.subplots(3, 1,figsize=(8, 10))
     bins = 40
-    plot_one_dist(ax[0], bins, "total potential energy", total_potential_energies[1:], bestfit=True, save=False)
-    plot_one_dist(ax[1], bins, "total kinetic energy", total_kinetic_energies[1:], bestfit=True, save=False)
-    plot_one_dist(ax[2], bins, "total energy", total_energies[1:], bestfit=True, save=False)
+    plot_one_dist(ax[0], bins, "total potential energy", total_potential_energies, bestfit=True, save=False)
+    plot_one_dist(ax[1], bins, "total kinetic energy", total_kinetic_energies, bestfit=True, save=False)
+    total_energy_std = plot_one_dist(ax[2], bins, "total energy", total_energies, bestfit=True, save=False)[1]
+    print(f"Standard deviation of total energy is {total_energy_std} kJ/mol")
     plt.savefig(output_fig_filename + '.png', dpi=200)
     plt.show()
 
