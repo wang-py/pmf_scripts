@@ -12,7 +12,21 @@ def get_total_kinetic_energy(translational, rotational):
 
 def get_potential_energy(energy_file):
     """
-    function that gets individual average energies from input xvgs
+    function that gets potential energies from input xvgs
+    output is in kJ/mol
+    """
+    energy = get_energy_from_xvg(energy_file)
+    #coulomb = energy[:, 3]
+    #LJ = energy[:, 4]
+    #avg_total_energy = np.mean(coulomb)
+    #avg_total_energy = np.mean(LJ)
+    total_energies = energy[:,0] + energy[:,1]
+
+    return total_energies
+
+def get_cluster_potential_energy(energy_file):
+    """
+    function that gets potential energies from input xvgs
     output is in kJ/mol
     """
     energy = get_energy_from_xvg(energy_file)
@@ -25,6 +39,20 @@ def get_potential_energy(energy_file):
     total_energies = protein_water + water_water
 
     return total_energies
+
+def get_restraint_energy(energy_file):
+    """
+    function that gets restraint energies from input xvgs
+    output is in kJ/mol
+    """
+    energy = get_energy_from_xvg(energy_file)
+    #coulomb = energy[:, 3]
+    #LJ = energy[:, 4]
+    #avg_total_energy = np.mean(coulomb)
+    #avg_total_energy = np.mean(LJ)
+    restraint_energies = energy[:, 4] 
+
+    return restraint_energies
 
 def get_total_energy(energy_files):
     """
@@ -48,12 +76,16 @@ if __name__ == "__main__":
     translational_xvgs = sorted(glob(input_path + "/*trans_energy.xvg"), key=os.path.getmtime)
     rotational_xvgs = sorted(glob(input_path + "/*rot_energy.xvg"), key=os.path.getmtime)
 
+    #total_potential_energies = get_cluster_potential_energy(gmx_potential_energy_file)
     total_potential_energies = get_potential_energy(gmx_potential_energy_file)
+    #total_restraint_energies = get_restraint_energy(gmx_potential_energy_file)
     translational_energies = get_total_energy(translational_xvgs)
     rotational_energies = get_total_energy(rotational_xvgs)
     total_kinetic_energies = get_total_kinetic_energy(translational_energies, rotational_energies)
 
-    total_energies = total_potential_energies + total_kinetic_energies[:, 0]
+    #total_potential_and_restraint = total_potential_energies + total_restraint_energies
+    #total_energies = total_potential_and_restraint + total_kinetic_energies[:, 0] 
+    total_energies = total_potential_energies + total_kinetic_energies[:, 0] 
 
     fig, ax = plt.subplots(3, 1,figsize=(8, 10))
     bins = 40
