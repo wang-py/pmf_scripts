@@ -8,9 +8,9 @@ def read_temp_vs_std(input_file):
     temp_vs_std = np.array([x.split() for x in data])
     return temp_vs_std.astype(float)
 
-def get_substates_vs_temp(temp_vs_std):
+def get_substates_vs_temp(temp_vs_std, N):
     R = 0.008314 #kJ/mol K
-    sqrt_N = np.sqrt(1)
+    sqrt_N = np.sqrt(N)
     num_of_pts = temp_vs_std.shape[0]
     dof = np.zeros(num_of_pts)
     substates = np.zeros(num_of_pts)
@@ -22,9 +22,10 @@ def get_substates_vs_temp(temp_vs_std):
 
 if __name__ == "__main__":
     input_file = sys.argv[1]
+    N = int(sys.argv[2])
     temp_vs_std = read_temp_vs_std(input_file)
     temp = temp_vs_std[:, 0]
-    substates, dof = get_substates_vs_temp(temp_vs_std)
+    substates, dof = get_substates_vs_temp(temp_vs_std, N)
     plt.plot(temp, substates, '-o')
     plt.xlabel("Temperature [K]")
     plt.ylabel("number of substates")
