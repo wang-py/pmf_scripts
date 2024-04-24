@@ -48,7 +48,7 @@ def plot_one_dist(ax, bins, this_xlabel, distribution, bestfit = True, save = Fa
     if save:
         plt.savefig(this_xlabel+".png", dpi=200)
     # return the plot object
-    return distribution_mean
+    return distribution_mean, distribution_std
 
 def get_initial_cluster_energy(cluster_energy_xvg):
     """
