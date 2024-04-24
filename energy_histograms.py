@@ -55,9 +55,12 @@ def plot_one_dist(ax, bins, this_xlabel, distribution, save = False):
 if __name__ == "__main__":
     energy_xvg = sys.argv[1]
     xvg_data = get_data_from_xvg(energy_xvg)
-    fig, ax = plt.subplots(1, 2, sharey = False, sharex = True, figsize=(14,10))
+    total_energy = np.sum(xvg_data, axis=1)
+    #total_energy_minus_restr = xvg_data[:,1] - xvg_data[:,0]
+    fig, ax = plt.subplots(figsize=(14,10))
+    #fig, ax = plt.subplots(1, 2, sharey = False, sharex = True, figsize=(14,10))
     bins = 50
-    plot_one_dist(ax[0], bins, "Coulomb",xvg_data[:, 0])
-    plot_one_dist(ax[1], bins, "LJ", xvg_data[:, 1])
+    plot_one_dist(ax, bins, "Total", total_energy)
+    #plot_one_dist(ax[1], bins, "LJ", xvg_data[:, 1])
     plt.show()
     pass
