@@ -110,9 +110,7 @@ def get_minus_one_energy_vs_site(energy_files):
     return total_energies, site_number
 
 def output_to_txt(energies, filename):
-    with open(filename, 'w') as output:
-        output.writelines(energies)
-
+    energies.tofile(filename, sep='\n')
 if __name__ == '__main__':
     #TODO this script should output txt files
     cluster_energy_xvg = sys.argv[1]
@@ -124,7 +122,6 @@ if __name__ == '__main__':
     # calculate removal energies
     removal_energies, std_removal_energies, sites = get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files)
     output_to_txt(removal_energies, "removal_energies.txt")
-    output_to_txt(std_removal_energies, "std_removal_energies.txt")
    # gmx_potential_energy, gmx_std = get_gmx_energies(gmx_potential_energy_file)
    # output_to_txt(gmx_potential_energy, "gmx_energy.txt")
    # output_to_txt(gmx_potential_std, "gmx_std.txt")
