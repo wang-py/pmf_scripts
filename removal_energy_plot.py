@@ -150,6 +150,7 @@ def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_fi
     pass
 
 if __name__ == '__main__':
+    #TODO split script into calculation and plotting, this script should output txt files
     cluster_energy_xvg = sys.argv[1]
     minus_one_energy_path = sys.argv[2]
     gmx_potential_energy_file = sys.argv[3]
