@@ -23,27 +23,15 @@ def get_site_number_from_energy_file(energy_file):
 
     return site_number
     
-def get_energy_vs_site(energy_files):
+def get_energy_vs_site(energy_input):
     """
     function that gets individual average energies from input xvgs
     output is in kJ/mol
     """
-    num_of_pts = len(energy_files)
-    total_energies = np.zeros(num_of_pts)
-    std_energies = np.zeros(num_of_pts)
-    site_number = np.zeros(num_of_pts)
-    for i in range(num_of_pts):
-        energy = get_energy_from_xvg(energy_files[i])
-        site_number[i] = get_site_number_from_energy_file(energy_files[i])
-        #coulomb = energy[:, 3]
-        #LJ = energy[:, 4]
-        #avg_total_energy = np.mean(coulomb)
-        #avg_total_energy = np.mean(LJ)
-        coulomb = energy[:, 0] + energy[:,2]
-        LJ = energy[:,1] + energy[:,3]
-        avg_total_energy = np.mean(coulomb + LJ)
-        std_energies[i] = np.std(LJ + coulomb)
-        total_energies[i] = avg_total_energy
+    total_energies = np.fromfile(energy_input, dtype=float, sep='\n')
+    std_energies = np.fromfile("std_" + energy_input, dtype=float, sep='\n')
+    num_of_pts = len(total_energies)
+    site_number = np.arange(num_of_pts) + 1
 
     return total_energies, std_energies, site_number
 
@@ -147,18 +135,16 @@ def write_gmx_energies_to_file(energies, std_energies):
     pass
 
 if __name__ == "__main__":
-    input_path = sys.argv[1]
-    if len(sys.argv) > 2:
-        output_fig_filename = sys.argv[2]
+    energy_input = sys.argv[1]
+    dowser_energy_file = sys.argv[2]
+    if len(sys.argv) > 3:
+        output_fig_filename = sys.argv[3]
     else:
         output_fig_filename = "output_fig"
-    energy_files = sorted(glob(input_path + "/*_energy.xvg"), key=os.path.getmtime)
-    dowser_energy_file = "dowser_energies.txt"
     #dowser_energy_file = input_path + "/dowser_energies.txt"
-    energies, std_energies, sites = get_energy_vs_site(energy_files)
+    energies, std_energies, sites = get_energy_vs_site(energy_input)
     dowser_energies= get_dowser_energies(dowser_energy_file)
     #gmx_energies = get_gmx_energies('gmx_energies_strong_restraint.txt')
-    write_gmx_energies_to_file(energies, std_energies)
     #plot_gmx_energies_vs_site(energies, gmx_energies, sites, output_fig_filename)
     plot_energy_vs_site(energies, sites, output_fig_filename, std_energies, dowser_energies)
 
