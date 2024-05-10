@@ -122,11 +122,9 @@ def get_dowser_energies(dowser_energy_file):
     return np.array(dowser_energies)
 
 def get_gmx_energies(gmx_energy_file):
-    with open(gmx_energy_file, 'r') as DE:
-        data = np.array([line.split() for line in DE.readlines()])
-        gmx_energies = data[:, 0]
-        std_gmx_energies = data[:, 1]
-    return gmx_energies.astype(float), std_gmx_energies.astype(float)
+    gmx_energies = np.fromfile(gmx_energy_file, dtype=float, sep='\n')
+    std_gmx_energies = np.fromfile("std_" + gmx_energy_file, dtype=float, sep='\n')
+    return gmx_energies, std_gmx_energies
 
 def write_gmx_energies_to_file(energies, std_energies):
     with open("gmx_energies.txt", 'w') as gmx_E:
