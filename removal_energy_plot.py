@@ -65,6 +65,13 @@ def get_initial_cluster_energy(cluster_energy_xvg):
     avg_total_energy = np.mean(total_energy)
     return total_energy, avg_total_energy
 
+def get_removal_energy(removal_energy_file):
+    removal_energies = np.fromfile(removal_energy_file, dtype=float, sep='\n')
+    num_of_pts = len(removal_energies)
+    site_number = np.arange(num_of_pts) + 1
+
+    return removal_energies, site_number
+
 def get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files):
     num_of_pts = len(minus_one_energy_files)
     removal_energies = np.zeros(num_of_pts)
@@ -108,20 +115,24 @@ def get_minus_one_energy_vs_site(energy_files):
 
     return total_energies, site_number
 
-def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_filename, std_removal_energies, std_gmx_energies, dowser_energies):
+def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_filename, std_gmx_energies, dowser_energies, scaled_removal, scaled_dowser, scaled_gmx):
     cal_to_joules = 4.1868
     label_fontsize=16
     fig, ax = plt.subplots(figsize=(18,9))
 
     removal_energies = removal_energies / cal_to_joules
-    std_removal_energies /= cal_to_joules
+    #std_removal_energies /= cal_to_joules
     gmx_energies /= cal_to_joules
     std_gmx_energies /= cal_to_joules
+    scaled_removal /= cal_to_joules
+    scaled_gmx /= cal_to_joules
 
     plt.plot(sites, removal_energies, 'g^', label='removal', markersize=10)
     plt.plot(sites, gmx_energies, 'b^', label='gromacs potential', markersize=10)
+    plt.plot(sites, scaled_removal, '^', color='limegreen', label='scaled removal', markersize=10)
+    plt.plot(sites, scaled_gmx, '^', color='lightblue' ,label='scaled gromacs potential', markersize=10)
     #plt.errorbar(sites, gmx_energies, std_gmx_energies, capsize=10, linestyle='none', fmt='b', label='std gromacs')
-    plt.errorbar(sites, removal_energies, std_removal_energies, capsize=10, linestyle='none', fmt='g')#, label='std removal')
+    #plt.errorbar(sites, removal_energies, std_removal_energies, capsize=10, linestyle='none', fmt='g')#, label='std removal')
 
     sites_and_removal_energy = np.zeros((len(sites),2))
     for i in range(len(sites)):
@@ -138,6 +149,7 @@ def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_fi
     ax.tick_params(axis='y', labelsize=label_fontsize)
     if dowser_energies.any():
         plt.plot(sites, dowser_energies, 'rv', label='dowser', markersize=10)
+        plt.plot(sites, scaled_dowser, 'v',color='lightcoral', label='scaled dowser', markersize=10)
     #plt.title("total energy vs site number", fontsize=label_fontsize)
     bulk_energy = -42 / cal_to_joules
     plt.axhline(bulk_energy, color='k', linestyle='--', label='energy of water in bulk %.1f kCal/mol'%bulk_energy)
@@ -151,22 +163,27 @@ def plot_removal_energy_vs_site(removal_energies, gmx_energies, sites, output_fi
 
 if __name__ == '__main__':
     #TODO split script into calculation and plotting, this script should output txt files
-    cluster_energy_xvg = sys.argv[1]
-    minus_one_energy_path = sys.argv[2]
+    removal_energy_file = sys.argv[1]
+    dowser_energy_file = sys.argv[2]
     gmx_potential_energy_file = sys.argv[3]
-    if len(sys.argv) > 4:
-        output_fig_filename = sys.argv[4]
-    else:
-        output_fig_filename = "output_fig"
-    minus_one_energy_files = sorted(glob(minus_one_energy_path + "/*_energy.xvg"), key=os.path.getmtime)
-    dowser_energy_file = "dowser_energies.txt"
-    initial_cluster_energies, avg_initial_cluster_energy = get_initial_cluster_energy(cluster_energy_xvg)
+
+    scaled_removal_energy_file = sys.argv[4]
+    scaled_dowser_energy_file = sys.argv[5]
+    scaled_gmx_potential_energy_file = sys.argv[6]
+    output_fig_filename = 'output'
+    #if len(sys.argv) > 4:
+    #    output_fig_filename = sys.argv[4]
+    #else:
+    #    output_fig_filename = "output_fig"
     # plot distribution of potential energy
-    fig, ax = plt.subplots(figsize=(10, 8))
-    plot_one_dist(ax, 30, this_xlabel='cluster potential energy', distribution=initial_cluster_energies, bestfit=True, save=True)
-    print(f"the initial cluster energy is {avg_initial_cluster_energy} kJ/mol")
-    removal_energies, std_removal_energies, sites = get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files)
-    dowser_energies= get_dowser_energies(dowser_energy_file)
+    #fig, ax = plt.subplots(figsize=(10, 8))
+    #plot_one_dist(ax, 30, this_xlabel='cluster potential energy', distribution=initial_cluster_energies, bestfit=True, save=True)
+    #print(f"the initial cluster energy is {avg_initial_cluster_energy} kJ/mol")
+    removal_energies, sites = get_removal_energy(removal_energy_file)
+    scaled_removal, sites = get_removal_energy(scaled_removal_energy_file)
+    dowser_energies = get_dowser_energies(dowser_energy_file)
+    scaled_dowser = get_dowser_energies(scaled_dowser_energy_file)
     gmx_potential_energy, gmx_std = get_gmx_energies(gmx_potential_energy_file)
-    plot_removal_energy_vs_site(removal_energies, gmx_potential_energy, sites, output_fig_filename, std_removal_energies, gmx_std, dowser_energies)
+    scaled_gmx, scaled_gmx_std = get_gmx_energies(scaled_gmx_potential_energy_file)
+    plot_removal_energy_vs_site(removal_energies, gmx_potential_energy, sites, output_fig_filename, gmx_std, dowser_energies, scaled_removal, scaled_dowser, scaled_gmx)
     pass
