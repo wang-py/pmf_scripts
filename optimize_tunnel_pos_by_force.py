@@ -1,4 +1,4 @@
-# script that optimizes the tunnel points by shifting them in the direction 
+# script that optimizes the tunnel points by shifting them in the direction
 # of force exerted by the protein
 from pmf_functions import *
 from generate_pmf_configs_from_tunnel import *
