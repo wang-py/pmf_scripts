@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+from glob import glob
 from gromacs_energy_plot import *
 
 def plot_one_dist(ax, bins, this_xlabel, distribution, bestfit = True, save = False):
@@ -111,13 +112,19 @@ def get_minus_one_energy_vs_site(energy_files):
 
 def output_to_txt(energies, filename):
     energies.tofile(filename, sep='\n')
+
+
 if __name__ == '__main__':
     #TODO this script should output txt files
     cluster_energy_xvg = sys.argv[1]
     minus_one_energy_path = sys.argv[2]
     #gmx_potential_energy_file = sys.argv[3]
     minus_one_energy_files = sorted(glob(minus_one_energy_path + "/*_energy.xvg"), key=os.path.getmtime)
-    dowser_energy_file = "dowser_energies.txt"
+    if len(sys.argv) > 3:
+        dowser_energy_file = sys.argv[3]
+    else:
+        dowser_energy_file = "dowser_energies.txt"
+
     initial_cluster_energies, avg_initial_cluster_energy = get_initial_cluster_energy(cluster_energy_xvg)
     # calculate removal energies
     removal_energies, std_removal_energies, sites = get_removal_energy_and_std(cluster_energy_xvg, minus_one_energy_files)

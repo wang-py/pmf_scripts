@@ -15,7 +15,7 @@ def get_energy_from_xvg(input_xvg):
 
 def get_site_number_from_energy_file(energy_file):
     filename = os.path.basename(energy_file)
-    sn = re.findall('\_\d+\_', filename)
+    sn = re.findall(r'\_\d+\_', filename)
     sn = str(sn[0])
     sn = sn.strip('_')
     site_number = float(sn)
@@ -58,7 +58,8 @@ if __name__ == "__main__":
         output_filename = sys.argv[2]
     else:
         output_filename = "gmx_energies.txt"
-        output_std_filename = "std_" + output_filename
+
+    output_std_filename = "std_" + output_filename
     energy_files = sorted(glob(input_path + "/*_energy.xvg"), key=os.path.getmtime)
     #dowser_energy_file = "dowser_energies.txt"
     #dowser_energy_file = input_path + "/dowser_energies.txt"
