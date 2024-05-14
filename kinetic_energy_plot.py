@@ -6,9 +6,12 @@ from glob import glob
 from removal_energy_plot import plot_one_dist, get_initial_cluster_energy
 from gromacs_energy_plot import get_energy_from_xvg
 
+
 def get_total_kinetic_energy(translational, rotational):
     total_kinetic_energy = rotational + translational
+
     return total_kinetic_energy
+
 
 def get_potential_energy(energy_file):
     """
@@ -16,13 +19,14 @@ def get_potential_energy(energy_file):
     output is in kJ/mol
     """
     energy = get_energy_from_xvg(energy_file)
-    #coulomb = energy[:, 3]
-    #LJ = energy[:, 4]
-    #avg_total_energy = np.mean(coulomb)
-    #avg_total_energy = np.mean(LJ)
-    total_energies = energy[:,0] + energy[:,1]
+    # coulomb = energy[:, 3]
+    # LJ = energy[:, 4]
+    # avg_total_energy = np.mean(coulomb)
+    # avg_total_energy = np.mean(LJ)
+    total_energies = energy[:, 0] + energy[:, 1]
 
     return total_energies
+
 
 def get_cluster_potential_energy(energy_file):
     """
@@ -30,15 +34,16 @@ def get_cluster_potential_energy(energy_file):
     output is in kJ/mol
     """
     energy = get_energy_from_xvg(energy_file)
-    #coulomb = energy[:, 3]
-    #LJ = energy[:, 4]
-    #avg_total_energy = np.mean(coulomb)
-    #avg_total_energy = np.mean(LJ)
-    protein_water = energy[:, 0] + energy[:,1]
-    water_water = energy[:,2] + energy[:,3]
+    # coulomb = energy[:, 3]
+    # LJ = energy[:, 4]
+    # avg_total_energy = np.mean(coulomb)
+    # avg_total_energy = np.mean(LJ)
+    protein_water = energy[:, 0] + energy[:, 1]
+    water_water = energy[:, 2] + energy[:, 3]
     total_energies = protein_water + water_water
 
     return total_energies
+
 
 def get_restraint_energy(energy_file):
     """
@@ -46,13 +51,14 @@ def get_restraint_energy(energy_file):
     output is in kJ/mol
     """
     energy = get_energy_from_xvg(energy_file)
-    #coulomb = energy[:, 3]
-    #LJ = energy[:, 4]
-    #avg_total_energy = np.mean(coulomb)
-    #avg_total_energy = np.mean(LJ)
-    restraint_energies = energy[:, 0] 
+    # coulomb = energy[:, 3]
+    # LJ = energy[:, 4]
+    # avg_total_energy = np.mean(coulomb)
+    # avg_total_energy = np.mean(LJ)
+    restraint_energies = energy[:, 0]
 
     return restraint_energies
+
 
 def get_total_energy(energy_files):
     """
@@ -65,6 +71,7 @@ def get_total_energy(energy_files):
         total_energies += get_energy_from_xvg(energy_files[i])
 
     return total_energies
+
 
 if __name__ == "__main__":
     input_path = sys.argv[1]
@@ -87,7 +94,7 @@ if __name__ == "__main__":
     #total_energies = total_potential_and_restraint + total_kinetic_energies[:, 0] 
     total_energies = total_potential_energies + total_kinetic_energies[:, 0]
 
-    fig, ax = plt.subplots(3, 1,figsize=(8, 10))
+    fig, ax = plt.subplots(3, 1, figsize=(8, 10))
     bins = 40
     plot_one_dist(ax[0], bins, "total potential energy", total_potential_energies, bestfit=True, save=False)
     plot_one_dist(ax[1], bins, "total kinetic energy", total_kinetic_energies, bestfit=True, save=False)
